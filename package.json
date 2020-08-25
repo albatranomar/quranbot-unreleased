@@ -1,0 +1,28 @@
+{
+  "name": "Quranbot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/albatranomar/Quranbot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/albatranomar/Quranbot/issues"
+  },
+  "homepage": "https://github.com/albatranomar/Quranbot#readme",
+  "dependencies": {
+    "@discordjs/opus": "^0.3.2",
+    "discord-akairo": "^8.1.0",
+    "discord.js": "^12.3.1",
+    "opusscript": "0.0.7",
+    "sqlite": "^4.0.14",
+    "sqlite3": "^5.0.0"
+  }
+}
