@@ -1,0 +1,172 @@
+[
+  {
+    "identifier": "ar.abdulbasitmurattal",
+    "language": "ar",
+    "name": "عبد الباسط عبد الصمد",
+    "englishName": "Abdul Basit",
+    "format": "audio",
+    "type": "translation",
+    "direction": null,
+    "image": "https://cdn.discordapp.com/attachments/694287727444754573/697977180713517107/PicsArt_04-10-04.06.32.png"
+  },
+  {
+    "identifier": "ar.abdullahbasfar",
+    "language": "ar",
+    "name": "عبد الله بن علي بصفر",
+    "englishName": "Abdullah Basfar",
+    "format": "audio",
+    "type": "versebyverse",
+    "direction": null,
+    "image": "https://media.discordapp.net/attachments/702827650733047828/702830889712877608/PicsArt_04-23-01.36.36.png?width=585&height=585"
+  },
+  {
+    "identifier": "ar.abdurrahmaansudais",
+    "language": "ar",
+    "name": "عبد الرحمن السديس",
+    "englishName": "Abdurrahmaan As-Sudais",
+    "format": "audio",
+    "type": "versebyverse",
+    "direction": null,
+    "image": "https://media.discordapp.net/attachments/694287727444754573/697977182831509564/PicsArt_04-10-04.07.53.png?width=585&height=585"
+  },
+  {
+    "identifier": "ar.shaatree",
+    "language": "ar",
+    "name": "شيخ بن أبي بكر الشاطري",
+    "englishName": "Abu Bakr Ash-Shaatree",
+    "format": "audio",
+    "type": "versebyverse",
+    "direction": null,
+    "image": "https://cdn.discordapp.com/attachments/702827650733047828/702838264700207164/PicsArt_04-23-01.43.05.png"
+  },
+  {
+    "identifier": "ar.ahmedajamy",
+    "language": "ar",
+    "name": "أحمد علي العجمي",
+    "englishName": "Ahmed ibn Ali al-Ajamy",
+    "format": "audio",
+    "type": "versebyverse",
+    "direction": null,
+    "image": "https://cdn.discordapp.com/attachments/702827650733047828/702838307620651108/PicsArt_04-19-09.19.04.png"
+  },
+  {
+    "identifier": "ar.alafasy",
+    "language": "ar",
+    "name": "مشاري العفاسي",
+    "englishName": "Alafasy",
+    "format": "audio",
+    "type": "versebyverse",
+    "direction": null,
+    "image": "https://media.discordapp.net/attachments/694287727444754573/697977181732864020/PicsArt_04-10-04.10.25.png?width=585&height=585"
+  },
+  {
+    "identifier": "ar.hanirifai",
+    "language": "ar",
+    "name": "هاني الرفاعي",
+    "englishName": "Hani Rifai",
+    "format": "audio",
+    "type": "versebyverse",
+    "direction": null,
+    "image": "https://cdn.discordapp.com/attachments/702827650733047828/702838219858903050/PicsArt_04-23-01.44.37.png"
+  },
+  {
+    "identifier": "ar.husary",
+    "language": "ar",
+    "name": "محمود الحصري",
+    "englishName": "Husary",
+    "format": "audio",
+    "type": "versebyverse",
+    "direction": null,
+    "image": "https://cdn.discordapp.com/attachments/702827650733047828/702838218609000548/PicsArt_04-23-01.46.19.png"
+  },
+  {
+    "identifier": "ar.hudhaify",
+    "language": "ar",
+    "name": "علي بن عبد الرحمن الحذيفي",
+    "englishName": "Hudhaify",
+    "format": "audio",
+    "type": "versebyverse",
+    "direction": null,
+    "image": "https://cdn.discordapp.com/attachments/702827650733047828/702838217950625803/PicsArt_04-23-01.59.31.png"
+  },
+  {
+    "identifier": "ar.ibrahimakhbar",
+    "language": "ar",
+    "name": "إبراهيم الأخضر",
+    "englishName": "Ibrahim Akhdar",
+    "format": "audio",
+    "type": "versebyverse",
+    "direction": null,
+    "image": "https://cdn.discordapp.com/attachments/702827650733047828/702838216377630781/PicsArt_04-23-02.00.24.png"
+  },
+  {
+    "identifier": "ar.mahermuaiqly",
+    "language": "ar",
+    "name": "ماهر المعيقلي",
+    "englishName": "Maher Al Muaiqly",
+    "format": "audio",
+    "type": "versebyverse",
+    "direction": null,
+    "image": "https://cdn.discordapp.com/attachments/694287727444754573/697977179597963314/PicsArt_04-10-04.02.58.png"
+  },
+  {
+    "identifier": "ar.minshawi",
+    "language": "ar",
+    "name": "محمد صديق المنشاوي",
+    "englishName": "Minshawi",
+    "format": "audio",
+    "type": "translation",
+    "direction": null,
+    "image": "https://cdn.discordapp.com/attachments/694287727444754573/697977179148910622/PicsArt_04-10-04.04.46.png"
+  },
+  {
+    "identifier": "ar.muhammadayyoub",
+    "language": "ar",
+    "name": "محمد أيوب",
+    "englishName": "Muhammad Ayyoub",
+    "format": "audio",
+    "type": "versebyverse",
+    "direction": null,
+    "image": "https://cdn.discordapp.com/attachments/702827650733047828/702838217011101776/PicsArt_04-23-02.01.26.png"
+  },
+  {
+    "identifier": "ar.muhammadjibreel",
+    "language": "ar",
+    "name": "محمد جبريل",
+    "englishName": "Muhammad Jibreel",
+    "format": "audio",
+    "type": "versebyverse",
+    "direction": null,
+    "image": "https://cdn.discordapp.com/attachments/702827650733047828/702838219242209290/PicsArt_04-23-02.04.40.png"
+  },
+  {
+    "identifier": "ar.saoodshuraym",
+    "language": "ar",
+    "name": "سعود الشريم",
+    "englishName": "Saood bin Ibraaheem Ash-Shuraym",
+    "format": "audio",
+    "type": "versebyverse",
+    "direction": null,
+    "image": "https://cdn.discordapp.com/attachments/702827650733047828/702838215324860446/PicsArt_04-23-02.06.15.png"
+  },
+  {
+    "identifier": "ar.parhizgar",
+    "language": "ar",
+    "name": "شهريار برهيزكار",
+    "englishName": "Parhizgar",
+    "format": "audio",
+    "type": "versebyverse",
+    "direction": null,
+    "image": "https://cdn.discordapp.com/attachments/702827650733047828/702838217455697980/PicsArt_04-23-02.02.23.png"
+  },
+  {
+    "identifier": "ar.aymanswoaid",
+    "language": "ar",
+    "name": "أيمن سويد",
+    "englishName": "Ayman Sowaid",
+    "format": "audio",
+    "type": "versebyverse",
+    "direction": null,
+    "image": "https://cdn.discordapp.com/attachments/702827650733047828/702838215790297198/PicsArt_04-23-02.05.27.png"
+  }
+]
