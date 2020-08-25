@@ -13,6 +13,7 @@ module.exports = class extends AkairoClient {
     }, {
       disableMentions: 'everyone'
     });
+    this.config = config;
     this.commandHandler = new CommandHandler(this, {
       directory: `${__dirname}/commands/`,
       ignoreCooldownID: this.ownerID,
