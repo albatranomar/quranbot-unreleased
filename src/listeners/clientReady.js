@@ -47,7 +47,7 @@ class MessageListener extends Listener {
         ];
         this.costumActivitys(activitys);
     }
-    
+
     costumActivitys(acts) {
         let pick = require("pick-random");
         let time = Math.floor(((Math.random() * (90 - 60 + 1)) + 60) * 1000);
@@ -60,7 +60,7 @@ class MessageListener extends Listener {
             status: act.status
         }).then((presence) => {
             setTimeout(() => {
-                costumActivitys(acts);
+                this.costumActivitys(acts);
             }, time);
         }).catch(console.log);
     }
