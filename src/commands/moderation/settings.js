@@ -18,6 +18,9 @@ module.exports = class extends Command {
    * @param {*} args 
    */
   exec(message, args) {
-    
+    let guildData = {...this.client.guilds_settings.items.get(message.guild.id)};
+    delete guildData["quran_queue"];
+    let toShow = YAML.stringify(guildData);
+    return (Object.keys(guildData).length == 0) ? `\`\`\`css\nNothing is here\`\`\`` : `\`\`\`css\n${toShow.replace('---', '')}\`\`\``;
   }
 }
