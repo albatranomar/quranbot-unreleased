@@ -1,6 +1,6 @@
 # Configs
 config.js
-
+db.sqlite
 
 # Logs
 logs
