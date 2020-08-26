@@ -12,7 +12,15 @@ module.exports = class extends Command {
       args: [
         {
           id: "volume",
-          type: Argument.range('numner', 1, 100),
+          type: (message, arg) => {
+            if (!isNaN(arg)) {
+              arg = parseInt(arg);
+              if (arg > 0 && arg <= 100) {
+                return arg;
+              } else return null;
+            }
+            return null;
+          },
           default: 'current'
         }
       ]
