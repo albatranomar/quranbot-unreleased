@@ -20,7 +20,7 @@ module.exports = class extends Command {
       embed: new Discord.MessageEmbed()
         .setTitle(`I am in ${this.client.guilds.cache.size} guilds!`)
         .setColor("#ebf442")
-        .setFooter(`for list of guild type \`${this.prefix}guilds-list\``)
+        .setFooter(`for list of guild type \`${this.client.config.prefix}guilds-list\``)
         .setTimestamp()
     });
   }
