@@ -27,12 +27,7 @@ module.exports = class extends Command {
    * @param {*} args 
    */
   exec(message, args) {
-    let oldguildrole = this.client.guilds_settings.get(message.guild.id, 'quran_role');
-    if (!oldguildrole) {
-      return `**يجب عليك تجهيز سيرفرك فالبداية \`${this.client.config.prefix}تجهيز\`**`;
-    } else {
-      this.client.guilds_settings.set(message.guild.id, 'quran_role', args.role.id);
-      return `**تم تغير الرتبة المسؤولة عن تشغيل القران الكريم**`;
-    }
+    this.client.guilds_settings.set(message.guild.id, 'quran_role', args.role.id);
+    return `**تم تغير الرتبة المسؤولة عن تشغيل القران الكريم**`;
   }
 }

@@ -56,7 +56,7 @@ module.exports = class extends AkairoClient {
     const db = sqlite.open({ filename: `${__dirname}/databases/db.sqlite`, driver: sqlite3.Database })
       .then(d => d.run('CREATE TABLE IF NOT EXISTS guilds (id TEXT NOT NULL UNIQUE, settings TEXT)').then(() => d));
     this.guilds_settings = new SQLiteProvider(db, 'guilds', { dataColumn: 'settings' });
-
+    this.quran_connections = new Map();
     this.setup();
   }
 

@@ -26,11 +26,7 @@ module.exports = class extends Command {
    */
   exec(message, args) {
     let oldguildprefix = this.client.guilds_settings.get(message.guild.id, 'prefix');
-    if (!oldguildprefix) {
-      return `**يجب عليك تجهيز سيرفرك فالبداية \`${this.client.config.prefix}تجهيز\`**`;
-    } else {
-      this.client.guilds_settings.set(message.guild.id, 'prefix', args.newPrefix);
-      return `**تم تغير البريفكس بنجاح \n \`${oldguildprefix}\` -> \`${args.newPrefix}\`**`;
-    }
+    this.client.guilds_settings.set(message.guild.id, 'prefix', args.newPrefix);
+    return `**تم تغير البريفكس بنجاح \n \`${(oldguildprefix) ? oldguildprefix : this.client.config.prefix}\` -> \`${args.newPrefix}\`**`;
   }
 }
