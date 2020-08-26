@@ -2,7 +2,7 @@ const { Listener } = require("discord-akairo");
 
 class MessageListener extends Listener {
   constructor() {
-    super('message', {
+    super('ready', {
       emitter: 'client',
       event: 'ready',
       category: 'client'
