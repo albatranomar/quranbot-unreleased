@@ -3,9 +3,9 @@ const { Message, MessageEmbed } = require("discord.js");
 
 module.exports = class extends Listener {
   constructor() {
-    super('commandFinished', {
+    super('missingPermissions', {
       emitter: 'commandHandler',
-      event: 'commandFinished',
+      event: 'missingPermissions',
       category: 'commandHandler'
     });
   }
@@ -13,17 +13,16 @@ module.exports = class extends Listener {
    * 
    * @param {Message} message 
    * @param {Command} command 
-   * @param {String[]} args 
-   * @param {*} returnValue 
+   * @param {'client'|'user'} type,
+   * @param {*} missing
    */
-  exec(message, command, args, returnValue) {
+  exec(message, command, type, missing) {
     let simpleEmbed = new MessageEmbed()
       .setColor("RANDOM")
       .setFooter(`بواسطة: ${message.author.tag}`, message.author.displayAvatarURL());
-    if (returnValue) {
-      message.util.reply('',{
-        embed: simpleEmbed.setDescription(returnValue)
-      });
-    }
+    message.util.reply('', {
+      embed: simpleEmbed.setDescription(`${(type == "client") ? 'I' : 'You'} dont have \`${missing}\` Permission/s.`)
+    });
+    console.log(`missingPermissions[${command.id}]-${type}: ${missing}`);
   }
 }
