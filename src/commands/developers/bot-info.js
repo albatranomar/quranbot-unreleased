@@ -4,7 +4,7 @@ const { Command } = require('discord-akairo');
 module.exports = class extends Command {
   constructor() {
     super('bot-info', {
-      aliases: ['bot-info', 'botinfo', 'bot.info'],
+      aliases: ['bot-info', 'bot.info'],
       cooldown: 10000,
       ratelimit: 2,
       ownerOnly: true
