@@ -3,8 +3,8 @@ const Discord = require("discord.js");
 
 module.exports = class extends Inhibitor {
   constructor() {
-    super('notQuranChannel', {
-      reason: 'This Command must use in Quran channel. not here.'
+    super('memberDontHaveQuranRole', {
+      reason: 'This Command must use by someone have the Quran role. not you.'
     })
   }
   /**
@@ -14,7 +14,7 @@ module.exports = class extends Inhibitor {
     if (message.channel.type == 'dm') return false;
     let args = message.content.split(/ +/);
     let allaliases = [];
-    this.client.commandHandler.modules.filter(c => c.category != 'moderation').map(c => allaliases = allaliases.concat(c.aliases));
+    this.client.commandHandler.modules.filter(c => c.category == 'quran').map(c => allaliases = allaliases.concat(c.aliases));
     let check = false;
     for (const aliase of allaliases) {
       if (args[0].toLowerCase().endsWith(aliase)) {
@@ -23,9 +23,11 @@ module.exports = class extends Inhibitor {
       }
     }
     if (check) {
-      let quranChannel = this.client.guilds_settings.get(message.guild.id, 'quran_channel', 'defult');
-      if (quranChannel != 'defult') {
-        return message.channel.id != quranChannel;
+      let quranRole = this.client.guilds_settings.get(message.guild.id, 'quran_role', 'defult');
+      if (quranRole == 'defult') {
+        return !message.member.hasPermission('MANAGE_CHANNELS');
+      } else {
+        return !message.member.roles.cache.has(quranRole);
       }
     }
     return false;
