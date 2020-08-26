@@ -17,6 +17,8 @@ module.exports = class extends Listener {
    * @param {*} returnValue 
    */
   exec(message, command, args, returnValue) {
-    message.util.reply(returnValue);
+    if (returnValue) {
+      message.util.reply(returnValue);
+    }
   }
 }
