@@ -29,14 +29,14 @@ module.exports = class extends AkairoClient {
       handleEdits: true,
       argumentDefaults: {
         prompt: {
-          start: 'What is thing?',
-          modifyStart: (msg, text) => `${msg.author}, ${text}\nType \`cancel\` to cancel this command.`,
-          retry: 'What is thing, again?',
-          modifyRetry: (msg, text) => `${msg.author}, ${text}\nType \`cancel\` to cancel this command.`,
-          timeout: 'Out of time.',
-          ended: 'No more tries.',
-          cancel: 'Cancelled.',
-          retries: 5
+          start: '**لقد نسيت إرسال عنصر مطلوب. يمكنك ارساله الان**',
+          modifyStart: (msg, text) => `${msg.author}, ${text}\nأرسل \`cancel\` لإلغاء هذا الأمر بالكامل.`,
+          retry: '**ليس العنصر المطلوب حاول مره اخرى**',
+          modifyRetry: (msg, text) => `${msg.author}, ${text}\nأرسل \`cancel\` لإلغاء هذا الأمر بالكامل.`,
+          timeout: '**إنتهى الوقت المخصص للإجابة**',
+          ended: '**لا مزيد من المحاولات**',
+          cancel: '**تم إلغاء الأمر**',
+          retries: 3
         },
         modifyOtherwise: (msg, text) => `${msg.author}, ${text}`
       }
