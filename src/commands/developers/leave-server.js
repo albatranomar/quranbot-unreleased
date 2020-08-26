@@ -5,6 +5,7 @@ module.exports = class extends Command {
   constructor() {
     super('leave-server', {
       aliases: ['leave-server', 'plsleave', 'leave-guild'],
+      category: 'developers',
       cooldown: 10000,
       ratelimit: 2,
       ownerOnly: true,

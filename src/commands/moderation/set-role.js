@@ -5,6 +5,7 @@ module.exports = class extends Command {
   constructor() {
     super('set-role', {
       aliases: ['set-role', 'role', 'رتبة'],
+      category: 'moderation',
       cooldown: 10000,
       ratelimit: 2,
       channel: "guild",

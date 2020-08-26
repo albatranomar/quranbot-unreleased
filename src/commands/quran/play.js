@@ -7,6 +7,7 @@ module.exports = class extends Command {
   constructor() {
     super('play', {
       aliases: ['play', 'mushaf', 'مصحف', 'قران', 'القران'],
+      category: 'quran',
       cooldown: 10000,
       ratelimit: 2,
       channel: "guild",

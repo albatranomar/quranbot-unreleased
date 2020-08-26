@@ -6,6 +6,7 @@ module.exports = class extends Command {
   constructor() {
     super('settings', {
       aliases: ['show-settings', 'settings', 'settings-show', 'إعدادات', 'خصائص', 'اعدادات', 'الإعدادات', 'الاعدادات', 'الخصائص'],
+      category: 'moderation',
       cooldown: 10000,
       ratelimit: 2,
       channel: "guild",

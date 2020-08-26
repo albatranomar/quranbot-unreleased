@@ -5,6 +5,7 @@ module.exports = class extends Command {
   constructor() {
     super('set-prefix', {
       aliases: ['set-prefix', 'prefix', 'بريفكس'],
+      category: 'moderation',
       cooldown: 10000,
       ratelimit: 2,
       channel: "guild",

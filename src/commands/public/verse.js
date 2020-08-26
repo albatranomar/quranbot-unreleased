@@ -6,6 +6,7 @@ module.exports = class extends Command {
   constructor() {
     super('verse', {
       aliases: ['verse', 'اية', 'ايه'],
+      category: 'public',
       cooldown: 10000,
       ratelimit: 2,
       args: [

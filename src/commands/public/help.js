@@ -5,6 +5,7 @@ module.exports = class extends Command {
   constructor() {
     super('help', {
       aliases: ['help', 'hlp', 'h', 'commands', 'cmds'],
+      category: 'public',
       cooldown: 10000,
       ratelimit: 2
     });

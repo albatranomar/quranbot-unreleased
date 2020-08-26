@@ -5,6 +5,7 @@ module.exports = class extends Command {
   constructor() {
     super('eval', {
       aliases: ['eval', 'evl'],
+      category: 'developers',
       cooldown: 10000,
       ratelimit: 2,
       ownerOnly: true,

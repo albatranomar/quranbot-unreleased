@@ -6,6 +6,7 @@ module.exports = class extends Command {
   constructor() {
     super('readers', {
       aliases: ['readers', 'القراء', 'الاصوات'],
+      category: 'public',
       cooldown: 10000,
       ratelimit: 2
     });

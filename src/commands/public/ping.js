@@ -5,6 +5,7 @@ module.exports = class extends Command {
   constructor() {
     super('ping', {
       aliases: ['ping', 'pong', 'speed', 'test'],
+      category: 'public',
       cooldown: 10000,
       ratelimit: 2
     });

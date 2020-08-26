@@ -5,6 +5,7 @@ module.exports = class extends Command {
   constructor() {
     super('guilds-list', {
       aliases: ['guilds-list', 'servers-list'],
+      category: 'developers',
       cooldown: 10000,
       ratelimit: 2,
       ownerOnly: true
