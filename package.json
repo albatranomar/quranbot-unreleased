@@ -21,6 +21,7 @@
     "@discordjs/opus": "^0.3.2",
     "discord-akairo": "^8.1.0",
     "discord.js": "^12.3.1",
+    "json2yaml": "^1.1.0",
     "opusscript": "0.0.7",
     "pick-random": "^2.0.0",
     "sqlite": "^4.0.14",
