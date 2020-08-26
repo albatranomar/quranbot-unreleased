@@ -24,6 +24,10 @@ module.exports = class extends Command {
               }
             }
             return null;
+          },
+          prompt: {
+            start: `**يجب عليك الان إرسال إسم صحيح لسورة أو رقمها.**`,
+            retry: `**حاول مره اخرى, إرسال إسم صحيح لسورة أو رقمها **`
           }
         },
         {

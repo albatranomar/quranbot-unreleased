@@ -33,6 +33,6 @@ module.exports = class extends Command {
     serverQueue.volume = args.volume;
     this.client.guilds_settings.set(message.guild.id, 'quran_queue', serverQueue);
     connection.dispatcher.setVolumeLogarithmic(args.volume / 50);
-    return message.channel.send(simpleEmbed.setDescription(`** قمت بضبط مستوى الصوت على: ${args.volume}**`));
+    return `** قمت بضبط مستوى الصوت على: ${args.volume}**`;
   }
 }

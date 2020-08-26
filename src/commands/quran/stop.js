@@ -23,6 +23,7 @@ module.exports = class extends Command {
 		if (!channel) return `** أنا آسف ولكن يجب أن تكون في قناة صوتية لتشغيل القران الكريم! **`;
     if (!serverQueue) return `** لا يوجد شيء يمكنني تخطيه لك.**`;
     connection.dispatcher.end('Stop command has been used!');
+    connection.disconnect();
 		serverQueue.songs = [];
 		serverQueue.playing = false;
 		this.client.guilds_settings.delete(message.guild.id, 'quran_queue');

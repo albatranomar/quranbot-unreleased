@@ -20,7 +20,7 @@ module.exports = class extends Command {
     const serverQueue = this.client.guilds_settings.get(message.guild.id, 'quran_queue');
     if (!serverQueue) return `**لا يوجد شيء تستمع اليه حاليا. **`;
 		message.channel.send(``, {
-			embed: new MessageEmbed()
+			embed: new Discord.MessageEmbed()
 			.setTitle(`قائمة الإنتظار`)
 			.setDescription(`${serverQueue.songs.map((song, n) => `**${n+1}- \`${song.title}\`**`).join('\n')}`)
 			.setColor("RANDOM")
