@@ -19,7 +19,7 @@ module.exports = class extends Command {
   * @param {*} args 
   */
   exec(message, args) {
-    let serverQueue = this.client.guilds_settings.get(message.guild.id, 'quran_queue');
+    const serverQueue = this.client.guilds_settings.get(message.guild.id, 'quran_queue');
 		if (!serverQueue) return `**لا يوجد شيء تستمع اليه حاليا. **`;
 		return `** انت تستمع حاليا الى : \n \`${serverQueue.songs[0].title}\`**`;
   }
