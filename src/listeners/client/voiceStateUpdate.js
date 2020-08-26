@@ -1,6 +1,6 @@
 const { Listener } = require("discord-akairo");
 
-class MessageListener extends Listener {
+module.exports = class extends Listener {
   constructor() {
     super('voiceStateUpdate', {
       emitter: 'client',
@@ -11,14 +11,14 @@ class MessageListener extends Listener {
 
   async exec(vs0, vs1) {
     let serverQueue = this.client.guilds_settings.get(vs0.guild.id, 'quran_queue');
-    let connection = this.client.quran_connections.get(message.guild.id);
+    let connection = this.client.quran_connections.get(vs0.guild.id);
     if (!serverQueue) return;
     if (!connection) return;
-    let quranchannel = client.channels.cache.get(connection.voice.channelID);
+    let quranchannel = this.client.channels.cache.get(connection.voice.channelID);
     if (!quranchannel) return;
     let oldUserChannel = vs0.channel;
     let newUserChannel = vs1.channel;
-    if (vs1.member.id == client.user.id) {
+    if (vs1.member.id == this.client.user.id) {
       if (oldUserChannel !== null && newUserChannel === null) {
         if (connection) {
           if (connection.dispatcher) {
@@ -26,7 +26,7 @@ class MessageListener extends Listener {
           }
           connection.disconnect();
         }
-        this.client.guilds_settings.delete(message.guild.id, 'quran_queue');
+        this.client.guilds_settings.delete(vs0.guild.id, 'quran_queue');
         return;
       } else if (oldUserChannel !== null && newUserChannel !== null) {
         if ((oldUserChannel.id == quranchannel.id) && (newUserChannel.id != quranchannel.id)) {
@@ -37,7 +37,7 @@ class MessageListener extends Listener {
             }
             connection.disconnect();
           }
-          this.client.guilds_settings.delete(message.guild.id, 'quran_queue');
+          this.client.guilds_settings.delete(vs0.guild.id, 'quran_queue');
         };
       }
       return;
@@ -50,7 +50,7 @@ class MessageListener extends Listener {
         } else {
           if (quranchannel.members.size == 2) {
             serverQueue.playing = true;
-            this.client.guilds_settings.set(message.guild.id, 'quran_queue', serverQueue);
+            this.client.guilds_settings.set(vs0.guild.id, 'quran_queue', serverQueue);
             if (connection) {
               if (connection.dispatcher) {
                 connection.dispatcher.resume();
@@ -65,7 +65,7 @@ class MessageListener extends Listener {
       if (oldUserChannel.id == quranchannel.id) {
         if (quranchannel.members.size == 1) {
           serverQueue.playing = false;
-          this.client.guilds_settings.set(message.guild.id, 'quran_queue', serverQueue);
+          this.client.guilds_settings.set(vs0.guild.id, 'quran_queue', serverQueue);
           if (connection) {
             if (connection.dispatcher) {
               connection.dispatcher.pause();
@@ -78,7 +78,7 @@ class MessageListener extends Listener {
       if ((oldUserChannel.id == quranchannel.id) && (newUserChannel.id != quranchannel.id)) {
         if (quranchannel.members.size == 1) {
           sserverQueue.playing = false;
-          this.client.guilds_settings.set(message.guild.id, 'quran_queue', serverQueue);
+          this.client.guilds_settings.set(vs0.guild.id, 'quran_queue', serverQueue);
           if (connection) {
             if (connection.dispatcher) {
               connection.dispatcher.pause();
@@ -92,7 +92,7 @@ class MessageListener extends Listener {
         } else {
           if (quranchannel.members.size == 2) {
             serverQueue.playing = true;
-            this.client.guilds_settings.set(message.guild.id, 'quran_queue', serverQueue);
+            this.client.guilds_settings.set(vs0.guild.id, 'quran_queue', serverQueue);
             if (connection) {
               if (connection.dispatcher) {
                 connection.dispatcher.resume();
@@ -105,5 +105,3 @@ class MessageListener extends Listener {
     }
   }
 }
-
-module.exports = MessageListener;
