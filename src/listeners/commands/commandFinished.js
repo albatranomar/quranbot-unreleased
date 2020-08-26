@@ -1,5 +1,5 @@
 const { Listener } = require("discord-akairo");
-const { Message } = require("discord.js");
+const { Message, MessageEmbed } = require("discord.js");
 
 module.exports = class extends Listener {
   constructor() {
@@ -17,8 +17,13 @@ module.exports = class extends Listener {
    * @param {*} returnValue 
    */
   exec(message, command, args, returnValue) {
+    let simpleEmbed = new MessageEmbed()
+      .setColor("RANDOM")
+      .setFooter(`بواسطة: ${message.author.tag}`, message.author.displayAvatarURL());
     if (returnValue) {
-      message.util.reply(returnValue);
+      message.util.reply('',{
+        embed: simpleEmbed.setDescription(returnValue)
+      });
     }
   }
 }
