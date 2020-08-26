@@ -37,7 +37,6 @@ module.exports = class extends Command {
   exec(message, args) {
     console.log(args.rus.match.input)
     if (['yes', 'نعم'].includes(args.rus.match.input)) {
-    console.log(args.guild);
       args.guild.leave().then((g) => {
         this.client.ownerID.forEach(o => this.client.users.cache.get(o).send(`**Left From ${g.name}**`));
       });
