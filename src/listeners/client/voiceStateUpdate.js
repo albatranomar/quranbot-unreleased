@@ -15,7 +15,14 @@ module.exports = class extends Listener {
     if (!serverQueue) return;
     if (!connection) return;
     let quranchannel = this.client.channels.cache.get(connection.voice.channelID);
-    if (!quranchannel) return;
+    if (!quranchannel) {
+      if (connection.dispatcher) {
+        connection.dispatcher.end('Stop command has been used!');
+      }
+      connection.disconnect();
+      this.client.guilds_settings.delete(vs0.guild.id, 'quran_queue');
+      return;
+    };
     let oldUserChannel = vs0.channel;
     let newUserChannel = vs1.channel;
     if (vs1.member.id == this.client.user.id) {
