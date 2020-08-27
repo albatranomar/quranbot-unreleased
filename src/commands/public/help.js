@@ -1,6 +1,7 @@
 const { Message, MessageEmbed } = require("discord.js");
 const { Command } = require("discord-akairo");
 const { Menu } = require('discord.js-menu');
+const { async } = require("rxjs");
 
 module.exports = class extends Command {
     constructor() {
@@ -32,17 +33,17 @@ module.exports = class extends Command {
 
         let helpPages = [{
                 name: "quran",
-                content: new MessageEmbed(HelpEmbedDefult).setTitle(`الأوامر القران الكريم`).addFields(this.client.commandHandler.modules.filter(c => c.category == "quran").map((c, id) => { return { name: id, value: c.aliases.join('|') } })),
+                content: new MessageEmbed(HelpEmbedDefult).setTitle(`الأوامر القران الكريم`).addFields(this.client.commandHandler.modules.filter(c => c.category == "quran").map((c, id) => { return { name: `${prefix}${id}`, value: c.aliases.join('|') } })),
                 reactions
             },
             {
                 name: "moderation",
-                content: new MessageEmbed(HelpEmbedDefult).setTitle(`الأوامر الإدارية`).addFields(this.client.commandHandler.modules.filter(c => c.category == "moderation").map((c, id) => { return { name: id, value: c.aliases.join('|') } })),
+                content: new MessageEmbed(HelpEmbedDefult).setTitle(`الأوامر الإدارية`).addFields(this.client.commandHandler.modules.filter(c => c.category == "moderation").map((c, id) => { return { name: `${prefix}${id}`, value: c.aliases.join('|') } })),
                 reactions
             },
             {
                 name: "public",
-                content: new MessageEmbed(HelpEmbedDefult).setTitle(`الأوامر العامة`).addFields(this.client.commandHandler.modules.filter(c => c.category == "public").map((c, id) => { return { name: id, value: c.aliases.join('|') } })),
+                content: new MessageEmbed(HelpEmbedDefult).setTitle(`الأوامر العامة`).addFields(this.client.commandHandler.modules.filter(c => c.category == "public").map((c, id) => { return { name: `${prefix}${id}`, value: c.aliases.join('|') } })),
                 reactions
             }
         ]
@@ -55,13 +56,13 @@ module.exports = class extends Command {
             });
         }
 
-        message.author.send(`${message.author}`).then((dmMessage) => {
-                message.react("✅");
-                new Menu(dmMessage.channel, message.author.id, helpPages);
+        message.author.send(`${message.author}`).then(async(dmMessage) => {
+                await message.react("✅");
+                await (new Menu(dmMessage.channel, message.author.id, helpPages));
             })
-            .catch((e) => {
+            .catch(async(e) => {
                 console.log(`${e}`);
-                message.react("❌");
+                await message.react("❌");
             });
     }
 };
