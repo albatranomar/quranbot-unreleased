@@ -43,7 +43,7 @@ module.exports = class extends Command {
             },
             {
                 name: "public",
-                content: new MessageEmbed(HelpEmbedDefult).setTitle(`الأوامر العامة`).addFields(this.client.commandHandler.modules.filter(c => c.category == "public").map((c, id) => { return { name: `${prefix}${id}`, value: c.aliases.join('|') } })),
+                content: new MessageEmbed(HelpEmbedDefult).setTitle(`الأوامر العامة`).setDescription(`**Website [View](http://quranbot.ml/)|Link Bot [Add](https://discordapp.com/api/oauth2/authorize?client_id=692060368780001300&permissions=8&scope=bot)|Support [join](https://discord.gg/3rZjSyS)**`).addFields(this.client.commandHandler.modules.filter(c => c.category == "public").map((c, id) => { return { name: `${prefix}${id}`, value: c.aliases.join('|') } })),
                 reactions
             }
         ]
