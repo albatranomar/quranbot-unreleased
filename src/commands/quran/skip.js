@@ -22,7 +22,7 @@ module.exports = class extends Command {
         const { channel } = message.member.voice;
         if (!channel) return `** أنا آسف ولكن يجب أن تكون في قناة صوتية لتشغيل القران الكريم! **`;
         if (!serverQueue) return `** لا يوجد شيء يمكنني تخطيه لك.**`;
-        serverQueue.songs.shift();
+        serverQueue.songs[0].nowVerse = serverQueue.songs[0].endVerse;
         this.client.guilds_settings.set(message.guild.id, 'quran_queue', serverQueue);
         connection.dispatcher.end('Skip command has been used!');
         return `**تم التخطي بنجاح**`;
