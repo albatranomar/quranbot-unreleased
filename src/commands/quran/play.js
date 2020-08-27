@@ -176,7 +176,7 @@ module.exports = class extends Command {
             }
           }
         } else {
-          return `**إنتهى وقت الاختيار. سيتم ألغاء العملية.**`;
+          message.util.send(`**إنتهى وقت الاختيار. سيتم ألغاء العملية.**`);
         }
       });
     });
