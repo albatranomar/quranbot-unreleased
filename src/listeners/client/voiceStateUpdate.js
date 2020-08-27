@@ -84,7 +84,7 @@ module.exports = class extends Listener {
     } else if (oldUserChannel !== null && newUserChannel !== null) {
       if ((oldUserChannel.id == quranchannel.id) && (newUserChannel.id != quranchannel.id)) {
         if (quranchannel.members.size == 1) {
-          sserverQueue.playing = false;
+          serverQueue.playing = false;
           this.client.guilds_settings.set(vs0.guild.id, 'quran_queue', serverQueue);
           if (connection) {
             if (connection.dispatcher) {
