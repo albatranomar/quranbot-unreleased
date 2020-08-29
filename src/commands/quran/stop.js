@@ -12,6 +12,13 @@ module.exports = class extends Command {
     });
   }
   /**
+    * 
+    * @param {Discord.Message} message 
+    */
+  condition(message) {
+    return this.client.isOwner(message.author.id);
+  }
+  /**
   * 
   * @param {Discord.Message} message 
   * @param {*} args 
@@ -19,14 +26,14 @@ module.exports = class extends Command {
   exec(message, args) {
     const serverQueue = this.client.guilds_settings.get(message.guild.id, 'quran_queue');
     const connection = this.client.quran_connections.get(message.guild.id);
-		const { channel } = message.member.voice;
-		if (!channel) return `** أنا آسف ولكن يجب أن تكون في قناة صوتية لتشغيل القران الكريم! **`;
+    const { channel } = message.member.voice;
+    if (!channel) return `** أنا آسف ولكن يجب أن تكون في قناة صوتية لتشغيل القران الكريم! **`;
     if (!serverQueue) return `** لا يوجد شيء يمكنني ايقافه لك.**`;
     connection.dispatcher.end('Stop command has been used!');
     connection.disconnect();
-		serverQueue.songs = [];
-		serverQueue.playing = false;
-		this.client.guilds_settings.delete(message.guild.id, 'quran_queue');
-		return `**تم ايقاف البوت وحذف قائمة الإنتظار**`;
+    serverQueue.songs = [];
+    serverQueue.playing = false;
+    this.client.guilds_settings.delete(message.guild.id, 'quran_queue');
+    return `**تم ايقاف البوت وحذف قائمة الإنتظار**`;
   }
 }

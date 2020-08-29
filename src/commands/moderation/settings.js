@@ -14,12 +14,19 @@ module.exports = class extends Command {
     });
   }
   /**
+  * 
+  * @param {Discord.Message} message 
+  */
+  condition(message) {
+    return this.client.isOwner(message.author.id);
+  }
+  /**
    * 
    * @param {Discord.Message} message 
    * @param {*} args 
    */
   exec(message, args) {
-    let guildData = {...this.client.guilds_settings.items.get(message.guild.id)};
+    let guildData = { ...this.client.guilds_settings.items.get(message.guild.id) };
     delete guildData["quran_queue"];
     let toShow = YAML.stringify(guildData);
     return (Object.keys(guildData).length == 0) ? `\`\`\`css\nNothing is here\`\`\`` : `\`\`\`css\n${toShow.replace('---', '')}\`\`\``;
