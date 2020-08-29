@@ -8,8 +8,8 @@ module.exports = class extends Command {
     super('play', {
       aliases: ['play', 'mushaf', 'مصحف', 'قران', 'القران'],
       category: 'quran',
-      cooldown: 10000,
-      ratelimit: 2,
+      cooldown: 15000,
+      ratelimit: 1,
       channel: "guild",
       args: [
         {
@@ -78,7 +78,7 @@ module.exports = class extends Command {
               nowVerse: 1
             };
             if (serverQueue) {
-              if (serverQueue.size >= 10) {
+              if (serverQueue.size >= 5) {
                 return `**${message.author}, لا يمكن إضافة اكثر من 10 مقاطع الى قائمة الانتظار**`;
               } else {
                 serverQueue.songs.push(song);
@@ -132,7 +132,7 @@ module.exports = class extends Command {
               nowVerse: verseIndex
             };
             if (serverQueue) {
-              if (serverQueue.size >= 10) {
+              if (serverQueue.size >= 5) {
                 return `**${message.author}, لا يمكن إضافة اكثر من 10 مقاطع الى قائمة الانتظار**`;
               } else {
                 serverQueue.songs.push(song);
