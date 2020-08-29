@@ -19,15 +19,22 @@ module.exports = class extends Command {
   exec(message, args) {
     const serverQueue = this.client.guilds_settings.get(message.guild.id, 'quran_queue');
     const connection = this.client.quran_connections.get(message.guild.id);
-		if (serverQueue && serverQueue.playing) {
+    if (serverQueue && serverQueue.playing) {
+      if (!connection || !connection.dispatcher) {
+        if (connection) {
+          connection.disconnect();
+        }
+        this.client.guilds_settings.delete(message.guild.id, 'quran_queue');
+        return `** انت لا تستمع لشيء حاليا**`
+      }
       serverQueue.playing = false;
       this.client.guilds_settings.set(message.guild.id, 'quran_queue', serverQueue);
-			connection.dispatcher.pause();
-			return `** ⏸ أوقف صوت القران  مؤقتًا من أجلك! **`;
-		}
-		if (serverQueue && !serverQueue.playing) {
-			return `**ان البوت متوقف بالفعل لا حاجة لتعليقه**`;
-		}
-		return `** انت لا تستمع لشيء حاليا**`;
+      connection.dispatcher.pause();
+      return `** ⏸ أوقف صوت القران  مؤقتًا من أجلك! **`;
+    }
+    if (serverQueue && !serverQueue.playing) {
+      return `**ان البوت متوقف بالفعل لا حاجة لتعليقه**`;
+    }
+    return `** انت لا تستمع لشيء حاليا**`;
   }
 }
