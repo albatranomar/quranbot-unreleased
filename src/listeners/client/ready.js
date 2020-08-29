@@ -53,11 +53,8 @@ class MessageListener extends Listener {
       if (cc) {
         let conniction = await cc.join();
         this.client.quran_connections.set(lostedConnection[0], conniction);
+        this.playQuranThatLost(lostedConnection[1].songs[0], lostedConnection[0]);
       }
-      await this.sleeep(5000);
-    }
-    for (const lostedConnection of connections) {
-      this.playQuranThatLost(lostedConnection[1].songs[0], lostedConnection[0]);
       await this.sleeep(5000);
     }
   }
