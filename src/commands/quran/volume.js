@@ -36,7 +36,7 @@ module.exports = class extends Command {
     const connection = this.client.quran_connections.get(message.guild.id);
     const { channel } = message.member.voice;
     if (!channel) return `** أنا آسف ولكن يجب أن تكون في قناة صوتية لتشغيل القران الكريم! **`;
-    if (!serverQueue) return `** لا يوجد شيء يمكنني تخطيه لك.**`;
+    if (!serverQueue) return `** انت لا تستمع لشيء حاليا.**`;
     if (args.volume == 'current') return `مستوى الصوت الحالية: **${serverQueue.volume}**`;
     serverQueue.volume = args.volume;
     this.client.guilds_settings.set(message.guild.id, 'quran_queue', serverQueue);
