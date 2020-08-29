@@ -49,8 +49,11 @@ class MessageListener extends Listener {
     // Quran Reconnect With all Lost connictions.
     let connections = this.client.guilds_settings.items.filter((d, k) => 'quran_queue' in d).map((d, k) => [k, d["quran_queue"]]);
     for (const lostedConnection of connections) {
-      let conniction = await this.client.channels.cache.get(lostedConnection[1].voiceChannelID).join();
-      this.client.quran_connections.set(lostedConnection[0], conniction);
+      let cc = this.client.channels.cache.get(lostedConnection[1].voiceChannelID);
+      if (cc) {
+        let conniction = await cc.join();
+        this.client.quran_connections.set(lostedConnection[0], conniction);
+      }
       await this.sleeep(5000);
     }
     for (const lostedConnection of connections) {
