@@ -1,11 +1,11 @@
 const Discord = require("discord.js");
-const { Command } = require('discord-akairo');
+const { Command } = require("discord-akairo");
 
 module.exports = class extends Command {
   constructor() {
-    super('set-role', {
-      aliases: ['set-role', 'role', 'رتبة'],
-      category: 'moderation',
+    super("set-role", {
+      aliases: ["set-role", "role", "رتبة"],
+      category: "moderation",
       cooldown: 10000,
       ratelimit: 2,
       channel: "guild",
@@ -16,26 +16,23 @@ module.exports = class extends Command {
           type: "role",
           prompt: {
             start: `**يجب عليك الان إرسال id الرتبة او منشن الرتبة الان**`,
-            retry: `**حاول مره أخرى. أرسل الرتبة بطريقة صحيحة**`
-          }
-        }
-      ]
+            retry: `**حاول مره أخرى. أرسل الرتبة بطريقة صحيحة**`,
+          },
+        },
+      ],
     });
   }
   /**
-  * 
-  * @param {Discord.Message} message 
-  */
-  condition(message) {
-    return this.client.isOwner(message.author.id);
-  }
-  /**
-   * 
-   * @param {Discord.Message} message 
-   * @param {*} args 
+   *
+   * @param {Discord.Message} message
+   * @param {*} args
    */
   exec(message, args) {
-    this.client.guilds_settings.set(message.guild.id, 'quran_role', args.role.id);
+    this.client.guilds_settings.set(
+      message.guild.id,
+      "quran_role",
+      args.role.id
+    );
     return `**تم تغير الرتبة المسؤولة عن تشغيل القران الكريم**`;
   }
-}
+};

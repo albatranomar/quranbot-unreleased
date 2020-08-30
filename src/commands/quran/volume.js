@@ -27,13 +27,6 @@ module.exports = class extends Command {
     });
   }
   /**
-    * 
-    * @param {Discord.Message} message 
-    */
-  condition(message) {
-    return this.client.isOwner(message.author.id);
-  }
-  /**
   * 
   * @param {Discord.Message} message 
   * @param {*} args 
