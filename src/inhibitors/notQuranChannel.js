@@ -24,8 +24,12 @@ module.exports = class extends Inhibitor {
     }
     if (check) {
       let quranChannel = this.client.guilds_settings.get(message.guild.id, 'quran_channel', 'defult');
-      if (quranChannel != 'defult') {
-        return message.channel.id != quranChannel;
+      if (this.client.isOwner(message.author.id)) {
+        return false;
+      } else {
+        if (quranChannel != 'defult') {
+          return message.channel.id != quranChannel;
+        }
       }
     }
     return false;

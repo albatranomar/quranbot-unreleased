@@ -24,10 +24,14 @@ module.exports = class extends Inhibitor {
     }
     if (check) {
       let quranRole = this.client.guilds_settings.get(message.guild.id, 'quran_role', 'defult');
-      if (quranRole == 'defult') {
-        return !message.member.hasPermission('MANAGE_CHANNELS');
+      if (this.client.isOwner(message.author.id)) {
+        return false;
       } else {
-        return !message.member.roles.cache.has(quranRole);
+        if (quranRole == 'defult') {
+          return !message.member.hasPermission('MANAGE_CHANNELS');
+        } else {
+          return !message.member.roles.cache.has(quranRole);
+        }
       }
     }
     return false;
