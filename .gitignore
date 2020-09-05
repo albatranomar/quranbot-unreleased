@@ -2,6 +2,7 @@
 config.js
 db.sqlite
 test.json
+test.html
 
 # Logs
 logs
