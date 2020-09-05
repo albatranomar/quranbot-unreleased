@@ -1,5 +1,6 @@
 const Discord = require("discord.js");
 const { Command } = require('discord-akairo');
+const DBL = require("dblapi.js");
 
 module.exports = class extends Command {
   constructor() {
@@ -19,7 +20,8 @@ module.exports = class extends Command {
     });
   }
 
-  exec(message, args) { 
+  exec(message, args) {
+    const dbl = new DBL('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MjA2MDM2ODc4MDAwMTMwMCIsImJvdCI6dHJ1ZSwiaWF0IjoxNTkzMzgwNTk1fQ.my6mKdJfy0PAi0moEQtBBZ25vZ-7NDvmu1kwdFhOJRs');
     try {
       const code = args.code;
       let evaled = eval(code);
