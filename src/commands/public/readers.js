@@ -1,4 +1,4 @@
-const Discord = require("discord.js");
+const { Message, MessageEmbed } = require("discord.js");
 const { Command } = require('discord-akairo');
 let readers = require("../../quran-json/readers.json");
 
@@ -7,16 +7,22 @@ module.exports = class extends Command {
     super('readers', {
       aliases: ['readers', 'القراء', 'الاصوات'],
       category: 'public',
-      cooldown: 10000,
-      ratelimit: 2
+      cooldown: 120000,
+      ratelimit: 1
     });
   }
-
-  exec(message) {
-    var embed = new Discord.MessageEmbed()
-      .setTitle("هاذي هي الأوامر للأستماع للقرآن")
-      .setDescription(`**${readers.map((reader, i) => `[${i+1}] ${reader.name}.`).join("\n")}**`)
-      .setThumbnail('https://cdn.discordapp.com/attachments/694287727444754573/697966982628245594/PicsArt_04-10-03.31.01.png')
+  /**
+   * 
+   * @param {Message} message 
+   */
+  async exec(message) {
+    await message.util.send(`${readers.map((reader, i) => `[${i+1}] ${reader.arabic_name}.`).join("\n")}`, {
+      split: true,
+      code: true
+    });
+    var embed = new MessageEmbed()
+      .setTitle("هاذي جميع القراء الذي يمكنك تشغيلهم")
+      .setThumbnail('https://cdn.discordapp.com/attachments/702827650733047828/751848553168764948/PicsArt_09-05-07.png')
       .setColor('#3374FF')
       .setFooter('طلب بواسطة' + message.author.tag, message.client.user.avatarURL)
     message.channel.send(embed);
