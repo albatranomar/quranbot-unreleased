@@ -17,10 +17,11 @@ module.exports = class extends AkairoClient {
     this.commandHandler = new CommandHandler(this, {
       directory: `${__dirname}/commands/`,
       ignoreCooldownID: this.ownerID,
+      ignorePermissions: this.ownerID,
       aliasReplacement: /-/g,
       prefix: (message) => {
         if (message.channel.type != "dm" && this.guilds_settings.get(message.guild.id, 'prefix')) {
-          return [config.prefix, this.guilds_settings.get(message.guild.id, 'prefix')]
+          return [`q${config.prefix}`, this.guilds_settings.get(message.guild.id, 'prefix')]
         }
         return [config.prefix];
       },
