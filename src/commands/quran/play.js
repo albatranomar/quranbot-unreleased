@@ -1,7 +1,6 @@
-const Discord = require("discord.js");
+let { MessageEmbed, Message } = require("discord.js");
 const { Command } = require('discord-akairo');
-const surahs = require("../../quran-json/surahs.pretty.json");
-const readers = require("../../quran-json/readers.json");
+const fetch = require('node-fetch');
 
 module.exports = class extends Command {
   constructor() {
@@ -14,11 +13,11 @@ module.exports = class extends Command {
       args: [
         {
           id: "toplay",
-          type: (message, arg) => {
+          type: async (message, arg) => {
             if (['all', 'كامل', 'كاملا'].includes(arg.toLowerCase())) {
               return "ALL"
             } else {
-              let s = this.getSurah(arg);
+              let s = await this.getSurah(arg);
               if (s instanceof Object) {
                 return s;
               }
@@ -29,239 +28,184 @@ module.exports = class extends Command {
             start: `**يجب عليك الان إرسال إسم صحيح لسورة أو رقمها.**`,
             retry: `**حاول مره اخرى, إرسال إسم صحيح لسورة أو رقمها **`
           }
-        },
-        {
-          id: 'ayah',
-          type: 'integer',
-          default: 1
         }
       ]
     });
   }
   /**
   * 
-  * @param {Discord.Message} message 
+  * @param {Message} message 
   * @param {*} args 
   */
-  exec(message, args) {
+  async exec(message, { toplay }) {
     const { channel } = message.member.voice;
     if (!channel) return `** أنا آسف ولكن يجب أن تكون في قناة صوتية لتشغيل القران الكريم! **`;
     const permissions = channel.permissionsFor(message.client.user);
     if (!permissions.has('CONNECT')) return '**I cannot connect to your voice channel, make sure I have the proper permissions!**';
     if (!permissions.has('SPEAK')) return '**I cannot speak in this voice channel, make sure I have the proper permissions!**';
-    let thisReader;
-    message.channel.send("", {
-      embed: new Discord.MessageEmbed()
-        .setAuthor(message.author.username, message.author.displayAvatarURL())
-        .setFooter(message.client.user.username, message.client.user.displayAvatarURL())
-        .setColor("RANDOM")
-        .setTitle(`يرجى الان إرسال رقم القارئ الذي تريده.`)
-        .setDescription(`**${readers.map((reader, i) => `${i + 1}- ${reader.name}`).join("\n")}**`)
-    }).then(async colMessage => {
-      let collector = message.channel.createMessageCollector((msg) => (!isNaN(msg.content)) && ((parseInt(msg.content) >= 1) && (parseInt(msg.content) <= readers.length) && msg.author.id == message.author.id), { time: 30000 })
-      collector.on("collect", (m) => {
-        if (m.deletable) m.delete();
-        thisReader = readers[parseInt(m.content) - 1];
-        collector.stop("got reader.");
-      });
-      collector.on("end", async (c, reason) => {
-        if (reason == "got reader.") {
-          let serverQueue = this.client.guilds_settings.get(message.guild.id, 'quran_queue');
-          colMessage.delete();
-          if (args.toplay == "ALL") {
-            const song = {
-              title: `القران الكريم كاملا بصوت القارئ ${thisReader.name}.`,
-              url: `http://cdn.alquran.cloud/media/audio/ayah/${thisReader.identifier}/{number}`,
-              readerImage: thisReader.image,
-              startVerse: 1,
-              endVerse: 6236,
-              nowVerse: 1
-            };
-            if (serverQueue) {
-              if (serverQueue.size >= 5) {
-                return `**${message.author}, لا يمكن إضافة اكثر من 10 مقاطع الى قائمة الانتظار**`;
+    let askForreaderMessage = await message.util.send(`**أرسل اسم القارء الذي تريده للبحث عنه.**`);
+    let readerCollector = await askForreaderMessage.channel.createMessageCollector((m) => m.author.id == message.author.id, { max: 1, time: 50000 });
+    readerCollector.on("collect", async (answerForReader) => {
+      let readers = require("../../quran-json/readers.json");
+      let listOfreaders = readers.filter(r => r.arabic_name && r.arabic_name.includes(answerForReader.content));
+      if (listOfreaders && listOfreaders.length > 0) {
+        let askForReaderNumberMessage = await message.util.send(``, {
+          embed: new MessageEmbed().setTitle(`أرسل رقم القارء الذي تريده`)
+            .setDescription(`**${listOfreaders.slice(0, 10).map(r => `${r.id}- ${r.arabic_name}`).join("\n")}**`)
+        });
+        if (answerForReader.deletable) answerForReader.delete();
+        let readerNumberCollector = await askForReaderNumberMessage.channel.createMessageCollector((m) => m.author.id == message.author.id && listOfreaders.map(r => r.id).includes(parseInt(m.content)), { max: 1, time: 50000 });
+        readerNumberCollector.on('collect', async (answerForReaderNumber) => {
+          let theReader = listOfreaders.find(r => r.id == parseInt(answerForReaderNumber.content));
+          let audio_files = require("../../quran-json/audiofiles.json");
+          if (answerForReaderNumber.deletable) answerForReaderNumber.delete();
+          let serverQueue = this.client.guilds_settings.get(message.guild.id, 'quran_queue', {
+            songs: [],
+            volume: 20,
+            playing: true,
+            repeat: false,
+            voiceChannelID: channel.id
+          });
+          if (serverQueue) {
+            if (serverQueue.songs.length >= 5) return message.util.send(`**${message.author}, لا يمكن إضافة اكثر من 5 مقاطع الى قائمة الانتظار**`);
+            let songToPlay = {};
+            if (toplay == "ALL") {
+              songToPlay = {
+                title: `القران الكريم كاملا بصوت القارئ ${theReader.arabic_name}.`,
+                url: `https://download.quranicaudio.com/quran/${theReader.relative_path}{number}`,
+                type: "ALL",
+                surahIndex: 1
+              }
+            } else {
+              let files = audio_files.filter(file => file.surah_id == toplay.id && file.qari_id == theReader.id);
+              if (files && files.length > 0) {
+                let file = files[0];
+                let fileMp3 = `https://download.quranicaudio.com/quran/${file.qari.relative_path}${file.file_name}`;
+                songToPlay = {
+                  title: `القران الكريم. سورة ${toplay.name.arabic} بصوت القارئ ${theReader.arabic_name}`,
+                  url: fileMp3,
+                  type: "Alone",
+                }
               } else {
-                serverQueue.songs.push(song);
-                this.client.guilds_settings.set(message.guild.id, 'quran_queue', serverQueue);
-                message.channel.send({
-                  embed: new Discord.MessageEmbed()
-                    .setColor("RANDOM")
-                    .setFooter(`بواسطة: ${message.author.tag}`, message.author.displayAvatarURL())
-                    .setDescription(`**✅ تم إضافة إلى قائمة الإنتظار \n \`${song.title}\`**`)
-                    .setThumbnail(song.readerImage)
-                });
-                return;
+                return message.util.send(`**لم يتم إيجاد أي ملف ل \`${toplay.name.arabic}\` في ملفات القارئ \`${theReader.arabic_name}\` :(**`);
               }
             }
-
-            const queueConstruct = {
-              songs: [],
-              volume: 20,
-              playing: true,
-              repeat: false,
-              voiceChannelID: channel.id
-            };
-            queueConstruct.songs.push(song);
-            this.client.guilds_settings.set(message.guild.id, 'quran_queue', queueConstruct);
-            message.util.send({
-              embed: new Discord.MessageEmbed()
-                .setColor("RANDOM")
-                .setFooter(`بواسطة: ${message.author.tag}`, message.author.displayAvatarURL())
-                .setDescription(`**🔊 تستمع الان إلى: \n \`${song.title}\`**`)
-                .setThumbnail(song.readerImage)
-            });
-
-            try {
-              const connection = await channel.join();
-              this.client.quran_connections.set(message.guild.id, connection);
-              this.play(queueConstruct.songs[0], message);
-            } catch (error) {
-              console.error(`I could not join the voice channel: ${error}`);
-              this.client.guilds_settings.delete(message.guild.id, 'quran_queue');
-              this.client.quran_connections.get(message.guild.id).disconnect();
-              return `**لم أستطع الانضمام إلى القناة الصوتية \n \`${error}\`**`;
+            let qEmbed = new MessageEmbed()
+              .setColor("RANDOM")
+              .setFooter(`بواسطة: ${message.author.tag}`, message.author.displayAvatarURL())
+              .setThumbnail(`https://cdn.discordapp.com/attachments/702827650733047828/751848553168764948/PicsArt_09-05-07.png`);
+            if (toplay != "ALL") {
+              qEmbed.addField('معلومات', `عدد الأيات : ${toplay.ayat} \nمن الصفحة ${toplay.page[0]} الى الصفحة ${toplay.page[1]}\nسورة ${(toplay.revelation.place == 'makkah') ? 'مكية' : 'مدنية'}\nترتيب النزول: ${toplay.revelation.order}`);
             }
-          } else {
-            let verseIndex = this.allVerses().find((s) => s.surahNumber == args.toplay.number && s.verseNumber == args.ayah).verseIndex;
-            const song = {
-              title: `${args.toplay.name} بصوت القارئ ${thisReader.name}.`,
-              url: `http://cdn.alquran.cloud/media/audio/ayah/${thisReader.identifier}/{number}`,
-              readerImage: thisReader.image,
-              startVerse: verseIndex,
-              endVerse: verseIndex + ((args.toplay.total_verses) - args.ayah),
-              nowVerse: verseIndex
-            };
-            if (serverQueue) {
-              if (serverQueue.size >= 5) {
-                return `**${message.author}, لا يمكن إضافة اكثر من 10 مقاطع الى قائمة الانتظار**`;
-              } else {
-                serverQueue.songs.push(song);
-                this.client.guilds_settings.set(message.guild.id, 'quran_queue', serverQueue);
-                message.channel.send({
-                  embed: new Discord.MessageEmbed()
-                    .setColor("RANDOM")
-                    .setFooter(`بواسطة: ${message.author.tag}`, message.author.displayAvatarURL())
-                    .setDescription(`**✅ تم إضافة إلى قائمة الإنتظار \n \`${song.title}\`**`)
-                    .setThumbnail(song.readerImage)
-                });
-                return;
+            if (serverQueue.songs.length > 0) {
+              serverQueue.songs.push(songToPlay);
+              this.client.guilds_settings.set(message.guild.id, 'quran_queue', serverQueue);
+              message.util.send({
+                embed: qEmbed.setDescription(`**✅ تم إضافة إلى قائمة الإنتظار \n \`${songToPlay.title}\`**`)
+              });
+            } else {
+              serverQueue.songs.push(songToPlay);
+              this.client.guilds_settings.set(message.guild.id, 'quran_queue', serverQueue);
+              message.util.send({
+                embed: qEmbed.setDescription(`**🔊 تستمع الان إلى: \n \`${songToPlay.title}\`**`)
+              });
+              try {
+                const connection = await channel.join();
+                this.client.quran_connections.set(message.guild.id, connection);
+                this.play(songToPlay, message);
+              } catch (error) {
+                console.error(`I could not join the voice channel: ${error}`);
+                this.client.guilds_settings.delete(message.guild.id, 'quran_queue');
+                this.client.quran_connections.get(message.guild.id).disconnect();
+                this.client.quran_connections.delete(message.guild.id);
+                return message.util.send(`**لم أستطع الانضمام إلى القناة الصوتية \n \`${error}\`**`);
               }
-            }
-
-            const queueConstruct = {
-              songs: [],
-              volume: 20,
-              playing: true,
-              repeat: false,
-              voiceChannelID: channel.id
-            };
-            queueConstruct.songs.push(song);
-            this.client.guilds_settings.set(message.guild.id, 'quran_queue', queueConstruct);
-            message.util.send({
-              embed: new Discord.MessageEmbed()
-                .setColor("RANDOM")
-                .setFooter(`بواسطة: ${message.author.tag}`, message.author.displayAvatarURL())
-                .setDescription(`**🔊 تستمع الان إلى: \n \`${song.title}\`**`)
-                .setThumbnail(song.readerImage)
-            });
-            try {
-              const connection = await channel.join();
-              this.client.quran_connections.set(message.guild.id, connection);
-              this.play(queueConstruct.songs[0], message);
-            } catch (error) {
-              console.error(`I could not join the voice channel: ${error}`);
-              this.client.guilds_settings.delete(message.guild.id, 'quran_queue');
-              this.client.quran_connections.get(message.guild.id).disconnect();
-              return `**لم أستطع الانضمام إلى القناة الصوتية \n \`${error}\`**`;
             }
           }
-        } else {
-          message.util.send(`**إنتهى وقت الاختيار. سيتم ألغاء العملية.**`);
-        }
-      });
+        });
+        readerNumberCollector.on('end', (_, reason) => {
+          if (reason == 'time') {
+            return message.util.send(`**إنتهى وقت الإختيار :(**`);
+          }
+        });
+      } else {
+        await message.util.send(``, {
+          embed: new MessageEmbed()
+            .setDescription(`**لم يتم إيجاد قارئ يحتوي في اسمه على: ${answerForReader.content}**`)
+        });
+        if (answerForReader.deletable) answerForReader.delete();
+        return;
+      }
     });
+    readerCollector.on("end", (_, reason) => {
+      if (reason == 'time') {
+        return message.util.send(`**إنتهى وقت المخصص لإرسال الاسم :(**`);
+      }
+    })
   }
   /**
    * @param {String|Number} surahSelector 
    * @returns {Object|String}
    */
-  getSurah(surahSelector) {
+  async getSurah(surahSelector) {
+    const surahsData = await fetch(`https://quranicaudio.com/api/surahs`);
+    const surahs = await surahsData.json();
     let surah;
     if (isNaN(surahSelector)) {
       if (surahSelector.endsWith("عمران") || surahSelector.startsWith("ال ")) surahSelector = "آل عمران";
-      if (surahs.some((s) => s.name == `سورة ${surahSelector}`)) {
-        surah = surahs.find((s) => s.name == `سورة ${surahSelector}`);
+      if (surahs.some((s) => s.name.arabic == surahSelector)) {
+        surah = surahs.find((s) => s.name.arabic == surahSelector);
       } else surah = `**لم يتم إيجاد اسم السورة الذي أرسلته تأكد من الاسمم مجددا**`;
     } else {
       if (parseInt(surahSelector) > 114 || parseInt(surahSelector) < 1) {
         surah = `**ان عدد السور في القران الكريم 114 سورة يرجى ان يكون رقم السورة التي تريدها محصورة بهذا الرقم**`;
       } else {
-        surah = surahs.find((s) => s.number == parseInt(surahSelector));
+        surah = surahs.find((s) => s.id == parseInt(surahSelector));
       }
     }
     return surah;
   }
-  /**
-   * @param {Number} surahSelector 
-   * @param {Object} thatSurah 
-   * @returns {String|Object}
-   */
-  getAyah(ayahSelector, thatSurah) {
-    let verse;
-    if (parseInt(ayahSelector) > thatSurah.total_verses || parseInt(ayahSelector) < 1) {
-      verse = `**إن سورة ${thatSurah.name} تحتوي فقط على ${thatSurah.total_verses} من الايات.**`;
-    } else {
-      verse = ayahSelector;
-    }
-    return verse;
-  }
-  /**
-   * @returns {Object[]}
-   */
-  allVerses() {
-    let index = 1;
-    let verses = [];
-    for (let i = 0; i < surahs.length; i++) {
-      let surah = surahs[i];
-      for (let j = 0; j < surah.total_verses; j++) {
-        let verseInVerses = {
-          verseIndex: index,
-          surahNumber: surah.number,
-          verseNumber: j + 1
-        }
-        verses.push(verseInVerses);
-        index++;
-      }
-    }
-    return verses;
-  }
-
   async play(song, message) {
     const queue = this.client.guilds_settings.get(message.guild.id, 'quran_queue');
     if (!song) {
       message.util.send(`** 🚶‍♂️لم يعد هناك أي شيء في قائمة الإنتظار..**`);
       this.client.guilds_settings.delete(message.guild.id, 'quran_queue');
-      this.client.quran_connections.get(message.guild.id).disconnect();
+      if (this.client.quran_connections.has(message.guild.id)) {
+        let guildConnection = this.client.quran_connections.get(message.guild.id);
+        if (guildConnection) {
+          guildConnection.disconnect();
+          this.client.quran_connections.delete(message.guild.id);
+        }
+        this.client.quran_connections.delete(message.guild.id);
+      }
       return;
     }
 
-    const dispatcher = this.client.quran_connections.get(message.guild.id).play(song.url.replace("{number}", song.nowVerse))
+    const dispatcher = this.client.quran_connections.get(message.guild.id).play((song.type == "ALL") ? song.url.replace(`{number}`, (`${song.surahIndex}`.padStart(3, '0') + '.mp3')) : song.url)
       .on('finish', () => {
         if (this.client.guilds_settings.get(message.guild.id, 'quran_queue')) {
-          if (song.nowVerse == song.endVerse) {
-            if (queue.repeat) {
-              queue.songs[0].nowVerse = queue.songs[0].startVerse;
+          if (song.type == "ALL") {
+            if (queue.repeat && song.surahIndex == 114) {
+              queue.songs[0].surahIndex = 1;
               this.client.guilds_settings.set(message.guild.id, 'quran_queue', queue);
+              this.play(queue.songs[0], message);
+            } else if (!queue.repeat && song.surahIndex == 114) {
+              queue.songs.shift();
+              this.client.guilds_settings.set(message.guild.id, 'quran_queue', queue);
+              this.play(queue.songs[0], message);
+            } else {
+              queue.songs[0].surahIndex++;
+              this.client.guilds_settings.set(message.guild.id, 'quran_queue', queue);
+              this.play(queue.songs[0], message);
+            }
+          } else {
+            if (queue.repeat) {
               this.play(queue.songs[0], message);
             } else {
               queue.songs.shift();
               this.client.guilds_settings.set(message.guild.id, 'quran_queue', queue);
               this.play(queue.songs[0], message);
             }
-          } else {
-            queue.songs[0].nowVerse++;
-            this.client.guilds_settings.set(message.guild.id, 'quran_queue', queue);
-            this.play(queue.songs[0], message);
           }
         }
       })
