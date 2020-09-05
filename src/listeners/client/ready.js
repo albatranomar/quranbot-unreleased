@@ -68,7 +68,7 @@ class MessageListener extends Listener {
           lostedConnection[0]
         );
       }
-      await this.sleeep(20000);
+      await this.sleeep(80000);
     }
   }
 
@@ -92,39 +92,52 @@ class MessageListener extends Listener {
       .catch(console.log);
   }
 
-  async playQuranThatLost(song, guildId) {
-    const queue = this.client.guilds_settings.get(guildId, "quran_queue");
+  async playQuranThatLost(song, guildID) {
+    const queue = this.client.guilds_settings.get(guildID, 'quran_queue');
     if (!song) {
-      this.client.guilds_settings.delete(guildId, "quran_queue");
-      this.client.quran_connections.get(guildId).disconnect();
+      this.client.guilds_settings.delete(guildID, 'quran_queue');
+      if (this.client.quran_connections.has(guildID)) {
+        let guildConnection = this.client.quran_connections.get(guildID);
+        if (guildConnection) {
+          guildConnection.disconnect();
+          this.client.quran_connections.delete(guildID);
+        }
+        this.client.quran_connections.delete(guildID);
+      }
       return;
     }
 
-    const dispatcher = this.client.quran_connections
-      .get(guildId)
-      .play(song.url.replace("{number}", song.nowVerse))
-      .on("finish", () => {
-        if (this.client.guilds_settings.get(guildId, "quran_queue")) {
-          if (song.nowVerse == song.endVerse) {
-            if (queue.repeat) {
-              queue.songs[0].nowVerse = queue.songs[0].startVerse;
-              this.client.guilds_settings.set(guildId, "quran_queue", queue);
-              this.playQuranThatLost(queue.songs[0], guildId);
-            } else {
+    const dispatcher = this.client.quran_connections.get(guildID).play((song.type == "ALL") ? song.url.replace(`{number}`, (`${song.surahIndex}`.padStart(3, '0') + '.mp3')) : song.url)
+      .on('finish', () => {
+        if (this.client.guilds_settings.get(guildID, 'quran_queue')) {
+          if (song.type == "ALL") {
+            if (queue.repeat && song.surahIndex == 114) {
+              queue.songs[0].surahIndex = 1;
+              this.client.guilds_settings.set(guildID, 'quran_queue', queue);
+              this.playQuranThatLost(queue.songs[0], guildID);
+            } else if (!queue.repeat && song.surahIndex == 114) {
               queue.songs.shift();
-              this.client.guilds_settings.set(guildId, "quran_queue", queue);
-              this.playQuranThatLost(queue.songs[0], guildId);
+              this.client.guilds_settings.set(guildID, 'quran_queue', queue);
+              this.playQuranThatLost(queue.songs[0], guildID);
+            } else {
+              queue.songs[0].surahIndex++;
+              this.client.guilds_settings.set(guildID, 'quran_queue', queue);
+              this.playQuranThatLost(queue.songs[0], guildID);
             }
           } else {
-            queue.songs[0].nowVerse++;
-            this.client.guilds_settings.set(guildId, "quran_queue", queue);
-            this.playQuranThatLost(queue.songs[0], guildId);
+            if (queue.repeat) {
+              this.playQuranThatLost(queue.songs[0], guildID);
+            } else {
+              queue.songs.shift();
+              this.client.guilds_settings.set(guildID, 'quran_queue', queue);
+              this.playQuranThatLost(queue.songs[0], guildID);
+            }
           }
         }
       })
-      .on("error", (error) => console.error(error));
+      .on('error', error => console.error(error));
     dispatcher.setVolumeLogarithmic(queue.volume / 50);
-  }
+  };
 
   async sleeep(time) {
     return new Promise((res, rej) => {
