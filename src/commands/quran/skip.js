@@ -20,11 +20,19 @@ module.exports = class extends Command {
     const serverQueue = this.client.guilds_settings.get(message.guild.id, 'quran_queue');
     const connection = this.client.quran_connections.get(message.guild.id);
     const { channel } = message.member.voice;
-    if (!channel) return `** أنا آسف ولكن يجب أن تكون في قناة صوتية لتشغيل القران الكريم! **`;
+    if (!channel) return `** أنا آسف ولكن يجب أن تكون في قناة صوتية لإستخدام أوامر القران الكريم! **`;
     if (!serverQueue) return `** لا يوجد شيء يمكنني تخطيه لك.**`;
-    serverQueue.songs[0].nowVerse = serverQueue.songs[0].endVerse;
-    this.client.guilds_settings.set(message.guild.id, 'quran_queue', serverQueue);
-    connection.dispatcher.end('Skip command has been used!');
+    if (serverQueue.songs[0].type == "ALL") {
+      serverQueue.songs[0].surahIndex = 114;
+      this.client.guilds_settings.set(message.guild.id, 'quran_queue', serverQueue);
+    }
+    if (connection) {
+      if (connection.dispatcher) {
+        connection.dispatcher.end('Skip command has been used!');
+      } else {
+        connection.disconnect();
+      }
+    }
     return `**تم التخطي بنجاح**`;
   }
 }
