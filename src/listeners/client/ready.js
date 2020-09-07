@@ -46,7 +46,7 @@ class MessageListener extends Listener {
         type: "WATCHING",
       },
       {
-        name: "17 من القراء الذين تخشع لهم الآذان",
+        name: "ما يزيد عن 100 قارء تخشع لهم الآذان",
         status: "idle",
         type: "LISTENING",
       },
@@ -74,7 +74,7 @@ class MessageListener extends Listener {
 
   costumActivitys(acts) {
     let pick = require("pick-random");
-    let time = Math.floor((Math.random() * (90 - 60 + 1) + 60) * 1000);
+    let time = Math.floor((Math.random() * (140 - 90 + 1) + 90) * 1000);
     let act = pick(acts, { count: 1 })[0];
     this.client.user
       .setPresence({
