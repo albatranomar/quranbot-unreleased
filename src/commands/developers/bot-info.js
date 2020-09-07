@@ -23,8 +23,9 @@ module.exports = class extends Command {
       .setColor("RANDOM")
       .setThumbnail(message.client.user.displayAvatarURL())
       .setFooter(`إذا كنت تريد قائمة بأسماء السيرفرات يمكنك كتابة الأمر التالي. [${message.client.config.prefix}servers].`, message.client.user.displayAvatarURL())
-      .addField(`**Guilds:**`, `**\`${message.client.guilds.cache.size}\` Servers.**`)
-      .addField(`**Users:**`, `**\`${message.client.users.cache.size}\` Users.**`)
+      .addField(`**Guilds:**`, `**\`${message.client.guilds.cache.size}\` Servers.**`, true)
+      .addField(`**Users:**`, `**\`${message.client.users.cache.size}\` Users.**`, true)
+      .addField(`**Connections:**`, `**\`${message.client.quran_connections.size}\` Quran connection.**`, true)
     });
   }
 }
