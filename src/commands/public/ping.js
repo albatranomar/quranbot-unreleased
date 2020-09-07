@@ -4,7 +4,7 @@ const { Command } = require('discord-akairo');
 module.exports = class extends Command {
   constructor() {
     super('ping', {
-      aliases: ['ping', 'pong', 'speed', 'test'],
+      aliases: ['ping', 'pong', 'speed', 'test', 'سرعة', 'بينغ', 'بينق'],
       category: 'public',
       cooldown: 10000,
       ratelimit: 2
