@@ -5,7 +5,7 @@ let readers = require("../../quran-json/readers.json");
 module.exports = class extends Command {
   constructor() {
     super('readers', {
-      aliases: ['readers', 'القراء', 'الاصوات'],
+      aliases: ['readers', 'القراء', 'الاصوات', 'قراء'],
       category: 'public',
       cooldown: 120000,
       ratelimit: 1
