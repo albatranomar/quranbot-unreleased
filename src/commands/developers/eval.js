@@ -21,7 +21,7 @@ module.exports = class extends Command {
   }
 
   exec(message, args) {
-    const dbl = new DBL('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MjA2MDM2ODc4MDAwMTMwMCIsImJvdCI6dHJ1ZSwiaWF0IjoxNTkzMzgwNTk1fQ.my6mKdJfy0PAi0moEQtBBZ25vZ-7NDvmu1kwdFhOJRs');
+    const dbl = new DBL(this.client.config.topggToken);
     try {
       const code = args.code;
       let evaled = eval(code);
