@@ -43,7 +43,9 @@ module.exports = class extends Command {
     const permissions = channel.permissionsFor(message.client.user);
     if (!permissions.has('CONNECT')) return '**I cannot connect to your voice channel, make sure I have the proper permissions!**';
     if (!permissions.has('SPEAK')) return '**I cannot speak in this voice channel, make sure I have the proper permissions!**';
-    let askForreaderMessage = await message.util.send(`**أرسل اسم القارء الذي تريده للبحث عنه.**`);
+    let askForreaderMessage = await message.util.send({
+      embed: new MessageEmbed().setColor("RANDOM").setDescription(`**أرسل اسم القراء الأول أو اسمه الأخير للبحث عنه.**`).setFooter(this.client.user.username, this.client.user.displayAvatarURL())
+    });
     let readerCollector = await askForreaderMessage.channel.createMessageCollector((m) => m.author.id == message.author.id, { max: 1, time: 50000 });
     readerCollector.on("collect", async (answerForReader) => {
       let readers = require("../../quran-json/readers.json");
@@ -51,7 +53,7 @@ module.exports = class extends Command {
       if (listOfreaders && listOfreaders.length > 0) {
         let askForReaderNumberMessage = await message.util.send(``, {
           embed: new MessageEmbed().setTitle(`أرسل رقم القارء الذي تريده`)
-            .setDescription(`**${listOfreaders.slice(0, 10).map(r => `${r.id}- ${r.arabic_name}`).join("\n")}**`)
+            .setDescription(`\`\`\`\n${listOfreaders.slice(0, 10).map(r => `${r.id}- ${r.arabic_name}`).join("\n")}\`\`\``)
         });
         if (answerForReader.deletable) answerForReader.delete();
         let readerNumberCollector = await askForReaderNumberMessage.channel.createMessageCollector((m) => m.author.id == message.author.id && listOfreaders.map(r => r.id).includes(parseInt(m.content)), { max: 1, time: 50000 });
@@ -125,7 +127,7 @@ module.exports = class extends Command {
         });
         readerNumberCollector.on('end', (_, reason) => {
           if (reason == 'time') {
-            return message.util.send(`**إنتهى وقت الإختيار :(**`);
+            return message.util.send(`** إنتهى وقت الإختيار رقم القارء :(**`);
           }
         });
       } else {
