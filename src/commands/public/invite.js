@@ -4,7 +4,7 @@ const { Command } = require('discord-akairo');
 module.exports = class extends Command {
   constructor() {
     super('invite', {
-      aliases: ['invite', 'inv', 'addme'],
+      aliases: ['invite', 'inv', 'addme', 'دعوة', 'يدعو'],
       category: 'public',
       cooldown: 10000,
       ratelimit: 2
