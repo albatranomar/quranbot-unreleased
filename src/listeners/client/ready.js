@@ -13,45 +13,15 @@ class MessageListener extends Listener {
     // Satrts
     console.log(`WOW We Are Ready To Go!!`);
     console.log(`Logged in {${this.client.user.tag}}`);
-    // Activitys
-    let activitys = [
-      {
-        name: "{prefix}inv -> Add Bot to your server.",
-        status: "online",
-        type: "PLAYING",
-      },
-      {
-        name: "{prefix}help -> Support server & our website.",
+    this.client.user
+      .setPresence({
+        activity: {
+          name: "بوت القران الكريم 💕",
+          type: "PLAYING",
+        },
         status: "dnd",
-        type: "WATCHING",
-      },
-      {
-        name: "{prefix}help -> لسيرفر الدعم و الموقع الخاص بنا.",
-        status: "dnd",
-        type: "WATCHING",
-      },
-      {
-        name: "{prefix}inv -> لإضافة البوت الى سيرفر.",
-        status: "idle",
-        type: "PLAYING",
-      },
-      {
-        name: "بوت القران الكريم 💕",
-        status: "dnd",
-        type: "PLAYING",
-      },
-      {
-        name: "سرعة , دعم فني, جودة 🛡️",
-        status: "dnd",
-        type: "WATCHING",
-      },
-      {
-        name: "ما يزيد عن 100 قارء تخشع لهم الآذان",
-        status: "idle",
-        type: "LISTENING",
-      },
-    ];
-    this.costumActivitys(activitys);
+      })
+
     // Quran Reconnect With all Lost connictions.
     let connections = this.client.guilds_settings.items
       .filter((d, k) => "quran_queue" in d)
@@ -70,26 +40,6 @@ class MessageListener extends Listener {
       }
       await this.sleeep(80000);
     }
-  }
-
-  costumActivitys(acts) {
-    let pick = require("pick-random");
-    let time = Math.floor((Math.random() * (140 - 90 + 1) + 90) * 1000);
-    let act = pick(acts, { count: 1 })[0];
-    this.client.user
-      .setPresence({
-        activity: {
-          name: act.name.replace(/{prefix}/g, this.client.config.prefix),
-          type: act.type,
-        },
-        status: act.status,
-      })
-      .then((presence) => {
-        setTimeout(() => {
-          this.costumActivitys(acts);
-        }, time);
-      })
-      .catch(console.log);
   }
 
   async playQuranThatLost(song, guildID) {

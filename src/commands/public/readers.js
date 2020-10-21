@@ -1,6 +1,6 @@
 const { Message, MessageEmbed } = require("discord.js");
 const { Command } = require('discord-akairo');
-let readers = require("../../quran-json/readers.json");
+let readers = require("../../quran-data/readers.json");
 
 module.exports = class extends Command {
   constructor() {

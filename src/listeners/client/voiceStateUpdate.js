@@ -12,8 +12,13 @@ module.exports = class extends Listener {
   async exec(vs0, vs1) {
     let serverQueue = this.client.guilds_settings.get(vs0.guild.id, 'quran_queue');
     let connection = this.client.quran_connections.get(vs0.guild.id);
-    if (!serverQueue) return;
-    if (!connection) return;
+    if (!serverQueue) return this.client.guilds_settings.delete(vs0.guild.id, 'quran_queue');
+    if (!connection || !connection.voice) {
+      if (connection.dispatcher) {
+        connection.dispatcher.end('Stop command has been used!');
+      }
+      connection.disconnect();
+    };
     let quranchannel = this.client.channels.cache.get(connection.voice.channelID);
     if (!quranchannel) {
       if (connection.dispatcher) {

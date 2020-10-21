@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 const { Command } = require('discord-akairo');
-const surahs = require("../../quran-json/surahs.pretty.json");
-const readers = require("../../quran-json/readers.json");
+const surahs = require("../../quran-data/surahs.pretty.json");
+const readers = require("../../quran-data/readers.json");
 
 module.exports = class extends Command {
   constructor() {
