@@ -32,6 +32,12 @@ module.exports = class extends Command {
         }
       ]
     });
+    this.defaultGuildQueue = {
+      songs: [],
+      volume: 20,
+      playing: true,
+      repeat: false,
+    };
   }
   /**
   * 
@@ -54,10 +60,7 @@ module.exports = class extends Command {
       let theReader = readers.find(r => r.id == parseInt(answerForReaderNumber.content));
       if (answerForReaderNumber.deletable) answerForReaderNumber.delete();
       let serverQueue = this.client.guilds_settings.get(message.guild.id, 'quran_queue', {
-        songs: [],
-        volume: 20,
-        playing: true,
-        repeat: false,
+        ...this.defaultGuildQueue,
         voiceChannelID: channel.id
       });
       if (serverQueue) {
@@ -66,22 +69,14 @@ module.exports = class extends Command {
         if (toplay == "ALL") {
           songToPlay = {
             title: `القران الكريم كاملا بصوت القارئ ${theReader.name}.`,
-            url: `https://download.quranicaudio.com/quran/${theReader.relative_path}{number}`,
+            url: `./Qaris/${theReader.folder_name}/v2v.mp3`,
             type: "ALL",
-            surahIndex: 1
           }
         } else {
-          let files = audio_files.filter(file => file.surah_id == toplay.id && file.qari_id == theReader.id);
-          if (files && files.length > 0) {
-            let file = files[0];
-            let fileMp3 = `https://download.quranicaudio.com/quran/${file.qari.relative_path}${file.file_name}`;
-            songToPlay = {
-              title: `القران الكريم. سورة ${toplay.name.arabic} بصوت القارئ ${theReader.arabic_name}`,
-              url: fileMp3,
-              type: "Alone",
-            }
-          } else {
-            return message.util.send(`**لم يتم إيجاد أي ملف ل \`${toplay.name.arabic}\` في ملفات القارئ \`${theReader.arabic_name}\` :(**`);
+          songToPlay = {
+            title: `القران الكريم. سورة ${toplay.name.arabic} بصوت القارئ ${theReader.name}`,
+            url: `./Qaris/${theReader.folder_name}/surahs/${toplay.id}.mp3`,
+            type: "Alone",
           }
         }
         let qEmbed = new MessageEmbed()
@@ -110,8 +105,14 @@ module.exports = class extends Command {
           } catch (error) {
             console.error(`I could not join the voice channel: ${error}`);
             this.client.guilds_settings.delete(message.guild.id, 'quran_queue');
-            this.client.quran_connections.get(message.guild.id).disconnect();
-            this.client.quran_connections.delete(message.guild.id);
+            if (this.client.quran_connections.has(message.guild.id)) {
+              let guildConnection = this.client.quran_connections.get(message.guild.id);
+              if (guildConnection) {
+                guildConnection.disconnect();
+                this.client.quran_connections.delete(message.guild.id);
+              }
+              this.client.quran_connections.delete(message.guild.id);
+            }
             return message.util.send(`**لم أستطع الانضمام إلى القناة الصوتية \n \`${error}\`**`);
           }
         }
@@ -145,7 +146,7 @@ module.exports = class extends Command {
     return surah;
   }
   async play(song, message) {
-    const queue = this.client.guilds_settings.get(message.guild.id, 'quran_queue');
+    const queue = this.client.guilds_settings.get(message.guild.id, 'quran_queue', this.defaultGuildQueue);
     if (!song) {
       message.util.send(`** 🚶‍♂️لم يعد هناك أي شيء في قائمة الإنتظار..**`);
       this.client.guilds_settings.delete(message.guild.id, 'quran_queue');
@@ -161,31 +162,15 @@ module.exports = class extends Command {
     }
 
     try {
-      const dispatcher = this.client.quran_connections.get(message.guild.id).play(`./test.mp3`)
+      const dispatcher = this.client.quran_connections.get(message.guild.id).play(`./24 clock countdown (10 seconds).mp3`)
         .on('finish', () => {
           if (this.client.guilds_settings.get(message.guild.id, 'quran_queue')) {
-            if (song.type == "ALL") {
-              if (queue.repeat && song.surahIndex == 114) {
-                queue.songs[0].surahIndex = 1;
-                this.client.guilds_settings.set(message.guild.id, 'quran_queue', queue);
-                this.play(queue.songs[0], message);
-              } else if (!queue.repeat && song.surahIndex == 114) {
-                queue.songs.shift();
-                this.client.guilds_settings.set(message.guild.id, 'quran_queue', queue);
-                this.play(queue.songs[0], message);
-              } else {
-                queue.songs[0].surahIndex++;
-                this.client.guilds_settings.set(message.guild.id, 'quran_queue', queue);
-                this.play(queue.songs[0], message);
-              }
+            if (queue.repeat) {
+              this.play(queue.songs[0], message)
             } else {
-              if (queue.repeat) {
-                this.play(queue.songs[0], message);
-              } else {
-                queue.songs.shift();
-                this.client.guilds_settings.set(message.guild.id, 'quran_queue', queue);
-                this.play(queue.songs[0], message);
-              }
+              queue.songs.shift();
+              this.client.guilds_settings.set(message.guild.id, 'quran_queue', queue);
+              this.play(queue.songs[0], message)
             }
           }
         })
