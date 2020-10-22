@@ -27,7 +27,8 @@ module.exports = class extends Command {
         connection.dispatcher.end('Stop command has been used!');
       }
       connection.disconnect();
-    }
+      this.client.quran_connections.delete(message.guild.id);
+    } else this.client.quran_connections.delete(message.guild.id);
     serverQueue.songs = [];
     serverQueue.playing = false;
     this.client.guilds_settings.delete(message.guild.id, 'quran_queue');
