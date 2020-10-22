@@ -162,7 +162,7 @@ module.exports = class extends Command {
     }
 
     try {
-      const dispatcher = this.client.quran_connections.get(message.guild.id).play(`./24 clock countdown (10 seconds).mp3`)
+      const dispatcher = this.client.quran_connections.get(message.guild.id).play(song.url)
         .on('finish', () => {
           if (this.client.guilds_settings.get(message.guild.id, 'quran_queue')) {
             if (queue.repeat) {
