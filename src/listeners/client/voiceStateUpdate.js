@@ -25,7 +25,7 @@ module.exports = class extends Listener {
               this.deleteConnection(guildID);
               return;
             } else if (oldUserChannel !== null && newUserChannel !== null) { // chack if client user switch channel.
-              if ((oldUserChannel.id == quranchannel.id) && (newUserChannel.id != quranchannel.id)) { // check if client user switch to channel that isnot the quran channel.
+              if ((oldUserChannel.id == quranChannel.id) && (newUserChannel.id != quranChannel.id)) { // check if client user switch to channel that isnot the quran channel.
                 newUserChannel.leave();
                 this.deleteQueue(guildID);
                 this.deleteConnection(guildID);
@@ -34,11 +34,11 @@ module.exports = class extends Listener {
             return;
           } else { // if it not the client user.
             if (oldUserChannel === null && newUserChannel !== null) { // check if user join to the voice channel.
-              if (newUserChannel.id == quranchannel.id) { // check if joined channel is the same as quran channel.
+              if (newUserChannel.id == quranChannel.id) { // check if joined channel is the same as quran channel.
                 if (serverQueue.playing) { //check if theres any thing plays in the channel.
                   null // do nothing.
                 } else { // if its not.
-                  if (quranchannel.members.size == 2) { // check if theres 2 members in the channel.
+                  if (quranChannel.members.size == 2) { // check if theres 2 members in the channel.
                     serverQueue.playing = true;
                     this.client.guilds_settings.set(guildID, 'quran_queue', serverQueue);
                     if (connection) {
@@ -51,8 +51,8 @@ module.exports = class extends Listener {
                 }
               }
             } else if (oldUserChannel !== null && newUserChannel === null) { // check if user left the voice channel.
-              if (oldUserChannel.id == quranchannel.id) { // check if joined channel is the same as quran channel.
-                if (quranchannel.members.size == 1) { // check if after the member left is the client user alone?
+              if (oldUserChannel.id == quranChannel.id) { // check if joined channel is the same as quran channel.
+                if (quranChannel.members.size == 1) { // check if after the member left is the client user alone?
                   serverQueue.playing = false;
                   this.client.guilds_settings.set(guildID, 'quran_queue', serverQueue);
                   if (connection) {
@@ -64,8 +64,8 @@ module.exports = class extends Listener {
                 }
               }
             } else if (oldUserChannel !== null && newUserChannel !== null) { // check if user switch the channels.
-              if ((oldUserChannel.id == quranchannel.id) && (newUserChannel.id != quranchannel.id)) { // check if the user left quran channel and went to another channel.
-                if (quranchannel.members.size == 1) { // check if after the member left is the client user alone?
+              if ((oldUserChannel.id == quranChannel.id) && (newUserChannel.id != quranChannel.id)) { // check if the user left quran channel and went to another channel.
+                if (quranChannel.members.size == 1) { // check if after the member left is the client user alone?
                   serverQueue.playing = false;
                   this.client.guilds_settings.set(guildID, 'quran_queue', serverQueue);
                   if (connection) {
@@ -75,11 +75,11 @@ module.exports = class extends Listener {
                   }
                   console.log(`paused[${vs0.guild.name}]`);
                 }
-              } else if ((oldUserChannel.id != quranchannel.id) && (newUserChannel.id == quranchannel.id)) { // check if the user join quran channel and come from another channel
+              } else if ((oldUserChannel.id != quranChannel.id) && (newUserChannel.id == quranChannel.id)) { // check if the user join quran channel and come from another channel
                 if (serverQueue.playing) { //check if theres any thing plays in the channel.
                   null // do nothing.
                 } else { // if its not.
-                  if (quranchannel.members.size == 2) { // check if theres 2 members in the channel.
+                  if (quranChannel.members.size == 2) { // check if theres 2 members in the channel.
                     serverQueue.playing = true;
                     this.client.guilds_settings.set(guildID, 'quran_queue', serverQueue);
                     if (connection) {
