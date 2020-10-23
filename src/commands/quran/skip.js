@@ -22,13 +22,10 @@ module.exports = class extends Command {
     const { channel } = message.member.voice;
     if (!channel) return `** أنا آسف ولكن يجب أن تكون في قناة صوتية لإستخدام أوامر القران الكريم! **`;
     if (!serverQueue) return `** لا يوجد شيء يمكنني تخطيه لك.**`;
-    serverQueue.songs.shift();
-    this.client.guilds_settings.set(message.guild.id, 'quran_queue', serverQueue);
+    if (!serverQueue.playing) return `** لا يمكن تخطي حاليا, يجب ان يكون القران غير متوقف **`;
     if (connection) {
       if (connection.dispatcher) {
         connection.dispatcher.end('Skip command has been used!');
-      } else {
-        connection.disconnect();
       }
     }
     return `**تم التخطي بنجاح**`;

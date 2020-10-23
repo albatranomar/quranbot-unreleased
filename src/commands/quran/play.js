@@ -164,13 +164,14 @@ module.exports = class extends Command {
     try {
       const dispatcher = this.client.quran_connections.get(message.guild.id).play(song.url)
         .on('finish', () => {
-          if (this.client.guilds_settings.get(message.guild.id, 'quran_queue')) {
-            if (queue.repeat) {
-              this.play(queue.songs[0], message)
+          let ikQueue = this.client.guilds_settings.get(message.guild.id, 'quran_queue');
+          if (ikQueue) {
+            if (ikQueue.repeat) {
+              this.play(ikQueue.songs[0], message)
             } else {
-              queue.songs.shift();
-              this.client.guilds_settings.set(message.guild.id, 'quran_queue', queue);
-              this.play(queue.songs[0], message)
+              ikQueue.songs.shift();
+              this.client.guilds_settings.set(message.guild.id, 'quran_queue', ikQueue);
+              this.play(ikQueue.songs[0], message)
             }
           }
         })
