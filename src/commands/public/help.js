@@ -59,7 +59,9 @@ module.exports = class extends Command {
 
       HelpEmbedDefult
       .setTitle(`Commands information [${hcommand.id}].`)
-      .setDescription(`**${(hcommand.description.content ? hcommand.description.content : hcommand.description)}**`);
+      .setDescription(`${(hcommand.description.content ? hcommand.description.content : hcommand.description)}`)
+      .addField(`Aliases`, hcommand.aliases.join(','))
+      
       if (hcommand.description.usage) {
         HelpEmbedDefult.addField(`Usage: `, hcommand.description.usage);
       }
@@ -68,9 +70,9 @@ module.exports = class extends Command {
       }
     }
 
-    message.author.send(HelpEmbedDefult).then(async (dmMessage) => (message.channel.type != 'dm') ? await message.react("✅") : null).catch(async (e) => {
+    message.channel.send(HelpEmbedDefult);/**.then(async (dmMessage) => (message.channel.type != 'dm') ? await message.react("✅") : null).catch(async (e) => {
       console.log(`${e}`);
       await message.react("❌");
-    });
+    }); */
   }
 };
