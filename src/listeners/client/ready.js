@@ -27,18 +27,20 @@ class MessageListener extends Listener {
       .filter((d, k) => "quran_queue" in d)
       .map((d, k) => [k, d["quran_queue"]]);
     for (const lostedConnection of connections) {
-      let cc = this.client.channels.cache.get(
-        lostedConnection[1].voiceChannelID
-      );
-      if (cc) {
-        let conniction = await cc.join();
-        this.client.quran_connections.set(lostedConnection[0], conniction);
-        this.playQuranThatLost(
-          lostedConnection[1].songs[0],
-          lostedConnection[0]
+      if (this.client.channels.cache.has(lostedConnection[1].voiceChannelID)) {
+        let cc = this.client.channels.cache.get(
+          lostedConnection[1].voiceChannelID
         );
+        if (cc) {
+          let conniction = await cc.join();
+          this.client.quran_connections.set(lostedConnection[0], conniction);
+          this.playQuranThatLost(
+            lostedConnection[1].songs[0],
+            lostedConnection[0]
+          );
+        }
+        await this.sleeep(80000);
       }
-      await this.sleeep(80000);
     }
   }
 
