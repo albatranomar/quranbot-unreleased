@@ -2,6 +2,7 @@ let { MessageEmbed, Message } = require("discord.js");
 const { Command } = require('discord-akairo');
 const fetch = require('node-fetch');
 const fs = require('fs');
+const { type } = require("os");
 
 module.exports = class extends Command {
   constructor() {
@@ -30,8 +31,19 @@ module.exports = class extends Command {
             retry: `**حاول مره اخرى, إرسال إسم صحيح لسورة أو رقمها **`
           }
         }
-      ]
-    });
+      ],
+      description: {
+        content: `Play a surah from the Quran by some of the readers in the voice channel.`,
+        usage: 'play [surah|all]',
+        examples: [
+          `play كامل`,
+          `play كاملا`,
+          `play all`,
+          `play البقرة`,
+          `play اسم السورة`
+        ]
+      }
+    })
     this.defaultGuildQueue = {
       songs: [],
       volume: 20,
@@ -46,15 +58,16 @@ module.exports = class extends Command {
   */
   async exec(message, { toplay }) {
     const { channel } = message.member.voice;
-    if (!channel) return `** أنا آسف ولكن يجب أن تكون في قناة صوتية لتشغيل القران الكريم! **`;
+    if (!channel) return `**يجب ان تكون في روم صوتي للأستماع للقرآن الكريم`;
     const permissions = channel.permissionsFor(message.client.user);
     if (!permissions.has('CONNECT')) return '**I cannot connect to your voice channel, make sure I have the proper permissions!**';
     if (!permissions.has('SPEAK')) return '**I cannot speak in this voice channel, make sure I have the proper permissions!**';
     let readers = require("../../quran-data/readers.json");
     let askForReaderNumberMessage = await message.util.send(``, {
-      embed: new MessageEmbed().setTitle(`أرسل رقم القارء الذي تريده`)
-        .setDescription(`\`\`\`\n${readers.map(r => `${r.id}- ${r.name}`).join("\n")}\`\`\``)
-    });
+      embed: new MessageEmbed()//.setTitle(`أرسل رقم القارىء الذي تريده`)
+        .setDescription(`\`\`\`ـ ـ ـ ـ ـ ـ ـ ـ اختر رقم القارىءـ ـ ـ ـ ـ ـ ـ ـ\`\`\`**\n${readers.map(r => `\`${r.id}\`- ${r.name}`).join("\n")}**\`\`\`ـ ـ ـ ـ ـ ـ ـ ـ 20 ثانية للأختيارـ ـ ـ ـ ـ ـ ـ ـ\`\`\``)
+    })
+
     let readerNumberCollector = await askForReaderNumberMessage.channel.createMessageCollector((m) => m.author.id == message.author.id && readers.map(r => r.id).includes(parseInt(m.content)), { max: 1, time: 50000 });
     readerNumberCollector.on('collect', async (answerForReaderNumber) => {
       let theReader = readers.find(r => r.id == parseInt(answerForReaderNumber.content));
@@ -63,6 +76,7 @@ module.exports = class extends Command {
         ...this.defaultGuildQueue,
         voiceChannelID: channel.id
       });
+
       if (serverQueue) {
         if (serverQueue.songs.length >= 5) return message.util.send(`**${message.author}, لا يمكن إضافة اكثر من 5 مقاطع الى قائمة الانتظار**`);
         let songToPlay = {};
@@ -79,6 +93,7 @@ module.exports = class extends Command {
             type: "Alone",
           }
         }
+
         let qEmbed = new MessageEmbed()
           .setColor("RANDOM")
           .setFooter(`بواسطة: ${message.author.tag}`, message.author.displayAvatarURL())
@@ -90,7 +105,7 @@ module.exports = class extends Command {
           serverQueue.songs.push(songToPlay);
           this.client.guilds_settings.set(message.guild.id, 'quran_queue', serverQueue);
           message.util.send({
-            embed: qEmbed.setDescription(`**✅ تم إضافة إلى قائمة الإنتظار \n \`${songToPlay.title}\`**`)
+            embed: qEmbed.setDescription(`**✅تم إضافة إلى قائمة الإنتظار \n \`${songToPlay.title}\`↪**`)
           });
         } else {
           serverQueue.songs.push(songToPlay);
@@ -120,9 +135,9 @@ module.exports = class extends Command {
     });
     readerNumberCollector.on('end', (_, reason) => {
       if (reason == 'time') {
-        return message.util.send(`** إنتهى وقت الإختيار رقم القارء :(**`);
+        return message.util.send(`**انتهى وقت اختيار القارىء❗**`);
       }
-    });
+    })
   }
   /**
    * @param {String|Number} surahSelector 
@@ -148,7 +163,7 @@ module.exports = class extends Command {
   async play(song, message) {
     const queue = this.client.guilds_settings.get(message.guild.id, 'quran_queue', this.defaultGuildQueue);
     if (!song) {
-      message.util.send(`** 🚶‍♂️لم يعد هناك أي شيء في قائمة الإنتظار..**`);
+      message.util.send(`**🚶‍♂️ Nothing is left in the queue.**`);
       this.client.guilds_settings.delete(message.guild.id, 'quran_queue');
       if (this.client.quran_connections.has(message.guild.id)) {
         let guildConnection = this.client.quran_connections.get(message.guild.id);

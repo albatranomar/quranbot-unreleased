@@ -12,14 +12,17 @@ module.exports = class extends Command {
       userPermissions: ["ADMINISTRATOR"],
       args: [
         {
-            id: 'yesOrNo',
-            type: /^(yes|no|نعم|لا)$/i,
-            prompt: {
-                start: `**يجب عليك الأن ارسال نعم أو لا لتأكيد العملية**`,
-                retry: `**يجب عليك الأن ارسال نعم أو لا لتأكيد العملية**`
-            }
+          id: 'yesOrNo',
+          type: /^(yes|no|نعم|لا)$/i,
+          prompt: {
+            start: `**يجب عليك الأن ارسال نعم أو لا لتأكيد العملية**`,
+            retry: `**يجب عليك الأن ارسال نعم أو لا لتأكيد العملية**`
+          }
         }
-    ]
+      ],
+      description: {
+        content: `Reset all server settings [prefix, quran role, quran channel]`
+      }
     });
   }
   /**
@@ -29,11 +32,11 @@ module.exports = class extends Command {
    */
   exec(message, args) {
     if (args.yesOrNo.match[0] == 'yes' || args.yesOrNo.match[0] == 'نعم') {
-        this.client.guilds_settings.delete(message.guild.id, "quran_channel");
-        this.client.guilds_settings.delete(message.guild.id, "prefix");
-        this.client.guilds_settings.delete(message.guild.id, "quran_role");
+      this.client.guilds_settings.delete(message.guild.id, "quran_channel");
+      this.client.guilds_settings.delete(message.guild.id, "prefix");
+      this.client.guilds_settings.delete(message.guild.id, "quran_role");
     } else {
-        return `**تم إلغاء هذه العملية**`;
+      return `**تم إلغاء هذه العملية**`;
     }
     return `**تم إعادة ضبط أعدادات سيرفرك**`;
   }

@@ -23,7 +23,10 @@ module.exports = class extends Command {
           },
           default: 'current'
         }
-      ]
+      ],
+      description: {
+        content: `Adjusting the volume of the bot while playing a surah.`
+      }
     });
   }
   /**

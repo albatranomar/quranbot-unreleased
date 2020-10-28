@@ -10,7 +10,13 @@ module.exports = class extends Command {
       category: 'quran',
       cooldown: 10000,
       ratelimit: 2,
-      channel: "guild"
+      channel: "guild",
+      description: {
+        content: `Shows you what is the surah that is playing right now.`,
+        examples: [
+          `now-playing`
+        ]
+      }
     });
   }
   /**

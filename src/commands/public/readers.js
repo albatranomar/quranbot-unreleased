@@ -8,7 +8,13 @@ module.exports = class extends Command {
       aliases: ['readers', 'القراء', 'الاصوات', 'قراء'],
       category: 'public',
       cooldown: 120000,
-      ratelimit: 1
+      ratelimit: 1,
+      description: {
+        content: `Show the readers(qaris) who are supported by the Quran bot.`,
+        examples: [
+          `readers`
+        ]
+      }
     });
   }
   /**

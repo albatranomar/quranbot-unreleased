@@ -7,21 +7,26 @@ module.exports = class extends Command {
       aliases: ['invite', 'inv', 'addme', 'دعوة', 'يدعو'],
       category: 'public',
       cooldown: 10000,
-      ratelimit: 2
+      ratelimit: 2,
+      description: {
+        content: `Adding the bot to your server`,
+        examples: [
+          `inv`
+        ]
+      }
     });
   }
-
   exec(message) {
     const embed = new Discord.MessageEmbed()
       .setTitle(`Click Me To Add [Quran Bot]`)
       .setURL(`https://discordapp.com/api/oauth2/authorize?client_id=${this.client.user.id}&permissions=104132416&scope=bot`)
-      .setDescription("**مرحباً انا بوت القرآن الكريم ان كنت تريديني ارجو منك الضغط على اضافة البوت في حالة لديك مشكلة في البوت توجه لدعم الفني **" + `\n` + `**Support [دعم الفني](https://discord.gg/wxhbgn)**`)
+      .setDescription("**Hi, I am the generous Quran bot. If you want me, please click add bot. If there is a problem with the bot, go to tech support**" + `\n` + `**Support [Enter](https://discord.gg/3rZjSyS)**`)
       .setThumbnail(message.client.user.displayAvatarURL())
       .setColor('#3374FF')
-    message.author.send(embed).then(() => {
+    message.channel.send(embed);/**.then(() => {
       message.react("✅");
     }).catch(() => {
       message.react("❌");
-    });
+    }); */
   }
 }

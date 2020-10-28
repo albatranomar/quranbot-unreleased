@@ -20,6 +20,9 @@ module.exports = class extends Command {
           },
         },
       ],
+      description: {
+        content: `Sends your server bot settings you added or edited.`
+      }
     });
   }
   /**

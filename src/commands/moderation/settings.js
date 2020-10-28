@@ -21,6 +21,9 @@ module.exports = class extends Command {
       ratelimit: 2,
       channel: "guild",
       userPermissions: ["ADMINISTRATOR"],
+      description: {
+        content: `Sends your server bot settings you added or edited.`
+      }
     });
   }
   /**

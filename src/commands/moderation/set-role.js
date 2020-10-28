@@ -20,6 +20,9 @@ module.exports = class extends Command {
           },
         },
       ],
+      description: {
+        content: `Determine the role that can play the Quran in your server.`
+      }
     });
   }
   /**

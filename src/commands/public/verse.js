@@ -26,7 +26,13 @@ module.exports = class extends Command {
             retry: `**يجب عليك الآن إرسال رقم السورة, حاول مره اخرى**`
           }
         }
-      ]
+      ],
+      description: {
+        content: `Sends you a picture of any verse from the Holy Quran with simple information about it`,
+        examples: [
+          `verse`
+        ]
+      }
     });
   }
 

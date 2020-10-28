@@ -10,7 +10,10 @@ module.exports = class extends Command {
       category: 'quran',
       cooldown: 10000,
       ratelimit: 2,
-      channel: "guild"
+      channel: "guild",
+      description: {
+        content: `Turn On/Off the repeat mode.`
+      }
     });
   }
   /**

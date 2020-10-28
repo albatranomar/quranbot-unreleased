@@ -8,7 +8,10 @@ module.exports = class extends Command {
       category: 'quran',
       cooldown: 10000,
       ratelimit: 2,
-      channel: "guild"
+      channel: "guild",
+      description: {
+        content: `Shows you the surahs that is waiting in Queue to play it.`,
+      }
     });
   }
   /**
