@@ -33,6 +33,9 @@ module.exports = class extends Command {
       "quran_role",
       args.role.id
     );
-    return `**تم تغير الرتبة المسؤولة عن تشغيل القران الكريم**`;
+    let reply = `**تم تغير الرتبة المسؤولة عن تشغيل القران الكريم**`;
+    message.author.send(reply);
+    message.guild.owner.send(reply);
+    return reply;
   }
 };

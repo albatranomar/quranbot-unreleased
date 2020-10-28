@@ -31,8 +31,12 @@ module.exports = class extends Command {
       "prefix"
     );
     this.client.guilds_settings.set(message.guild.id, "prefix", args.newPrefix);
-    return `**تم تغير البريفكس بنجاح \n \`${
+    let reply = `**تم تغير البريفكس بنجاح \n \`${
       oldguildprefix ? oldguildprefix : this.client.config.prefix
     }\` -> \`${args.newPrefix}\`**`;
+
+    message.author.send(reply);
+    message.guild.owner.send(reply);
+    return reply;
   }
 };

@@ -33,6 +33,9 @@ module.exports = class extends Command {
       "quran_channel",
       args.channel.id
     );
-    return `**تم تغير الشات المسموح فيه تشغيل القران الكريم**`;
+    let reply =  `**تم تغير الشات المسموح فيه تشغيل القران الكريم**`;
+    message.author.send(reply);
+    message.guild.owner.send(reply);
+    return reply;
   }
 };
