@@ -61,13 +61,20 @@ class MessageListener extends Listener {
     let song = queue.songs[0];
     const dispatcher = this.client.quran_connections.get(guildID).play(song.url)
       .on('finish', () => {
-        if (this.client.guilds_settings.get(guildID, 'quran_queue')) {
-          if (queue.repeat) {
-            this.playQuranThatLost(guildID);
+        let ikQueue = this.client.guilds_settings.get(guildID, 'quran_queue');
+        if (ikQueue) {
+          if (!ikQueue.stoped) {
+            if (ikQueue.repeat) {
+              this.playQuranThatLost(guildID)
+            } else {
+              ikQueue.songs.shift();
+              this.client.guilds_settings.set(guildID, 'quran_queue', ikQueue);
+              this.playQuranThatLost(guildID)
+            }
           } else {
-            queue.songs.shift();
-            this.client.guilds_settings.set(guildID, 'quran_queue', queue);
-            this.playQuranThatLost(guildID);
+            ikQueue.songs = [];
+            this.client.guilds_settings.set(guildID, 'quran_queue', ikQueue);
+            this.playQuranThatLost(guildID)
           }
         }
       })
