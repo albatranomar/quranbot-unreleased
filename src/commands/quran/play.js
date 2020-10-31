@@ -79,7 +79,7 @@ module.exports = class extends Command {
 
 
       if (serverQueue) {
-        if (serverQueue.songs.length >= 5) return message.util.send(`**${message.author}, لا يمكن إضافة اكثر من 5 مقاطع الى قائمة الانتظار**`);
+        if (serverQueue.songs.length >= 5 && !serverQueue.stoped) return message.util.send(`**${message.author}, لا يمكن إضافة اكثر من 5 مقاطع الى قائمة الانتظار**`);
         let songToPlay = {};
         if (toplay == "ALL") {
           songToPlay = {

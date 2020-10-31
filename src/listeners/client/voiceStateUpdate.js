@@ -101,6 +101,10 @@ module.exports = class extends Listener {
   }
 
   async deleteQueue(gid) {
+    let serverQueue = this.client.guilds_settings.get(gid, 'quran_queue', {});
+    serverQueue.songs = [];
+    serverQueue.stoped = false;
+    this.client.guilds_settings.set(gid, 'quran_queue', serverQueue);
     await this.client.guilds_settings.delete(gid, 'quran_queue');
     return 1;
   }
