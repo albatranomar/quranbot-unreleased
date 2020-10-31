@@ -102,7 +102,7 @@ module.exports = class extends Command {
         if (toplay != "ALL") {
           qEmbed.addField('معلومات', `عدد الأيات : ${toplay.ayat} \nمن الصفحة ${toplay.page[0]} الى الصفحة ${toplay.page[1]}\nسورة ${(toplay.revelation.place == 'makkah') ? 'مكية' : 'مدنية'}\nترتيب النزول: ${toplay.revelation.order}`);
         }
-        if (serverQueue.songs.length > 0 && this.client.quran_connections.has(message.guild.id)) {
+        if (serverQueue.songs.length > 0 && this.client.quran_connections.has(message.guild.id) && !serverQueue.stoped) {
           serverQueue.songs.push(songToPlay);
           this.client.guilds_settings.set(message.guild.id, 'quran_queue', serverQueue);
           message.util.send({
