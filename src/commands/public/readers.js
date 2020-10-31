@@ -22,7 +22,7 @@ module.exports = class extends Command {
    * @param {Message} message 
    */
   async exec(message) {
-    await message.util.send(`${readers.map((reader, i) => `[${i+1}] ${reader.arabic_name}.`).join("\n")}`, {
+    await message.util.send(`${readers.map((reader, i) => `[${i+1}] ${reader.name}.`).join("\n")}`, {
       split: true,
       code: true
     });
