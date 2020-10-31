@@ -27,7 +27,10 @@ module.exports = class extends Command {
             retry: `**يجب ان يكون جوابك ب \`نعم او لا\`**`
           }
         }
-      ]
+      ],
+      description: {
+        content: `👀`,
+      }
     });
   }
   /**

@@ -39,7 +39,7 @@ module.exports = class extends Command {
     }\` -> \`${args.newPrefix}\`**`;
 
     message.author.send(reply);
-    message.guild.owner.send(reply);
+    if (message.author.id != message.guild.ownerID) message.guild.owner.send(reply);
     return reply;
   }
 };

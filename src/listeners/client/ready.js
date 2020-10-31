@@ -11,12 +11,13 @@ class MessageListener extends Listener {
 
   async exec() {
     // Satrts
-    console.log(`WOW We Are Ready To Go!!`);
     console.log(`Logged in {${this.client.user.tag}}`);
+    console.log(`Servers [${this.client.guilds.cache.size}] Users [${this.client.users.cache.size}]`);
+    console.log(`------------------------------------------`);
     this.client.user
       .setPresence({
         activity: {
-          name: "بوت القران الكريم 💕",
+          name: "-help || بوت القران الكريم 💕",
           type: "PLAYING",
         },
         status: "dnd",
@@ -35,7 +36,6 @@ class MessageListener extends Listener {
           let conniction = await cc.join();
           this.client.quran_connections.set(lostedConnection[0], conniction);
           this.playQuranThatLost(
-            lostedConnection[1].songs[0],
             lostedConnection[0]
           );
         }
@@ -44,9 +44,9 @@ class MessageListener extends Listener {
     }
   }
 
-  async playQuranThatLost(song, guildID) {
+  async playQuranThatLost(guildID) {
     const queue = this.client.guilds_settings.get(guildID, 'quran_queue');
-    if (!song) {
+    if (!queue || !queue.songs[0]) {
       this.client.guilds_settings.delete(guildID, 'quran_queue');
       if (this.client.quran_connections.has(guildID)) {
         let guildConnection = this.client.quran_connections.get(guildID);
@@ -58,16 +58,16 @@ class MessageListener extends Listener {
       }
       return;
     }
-
+    let song = queue.songs[0];
     const dispatcher = this.client.quran_connections.get(guildID).play(song.url)
       .on('finish', () => {
         if (this.client.guilds_settings.get(guildID, 'quran_queue')) {
           if (queue.repeat) {
-            this.playQuranThatLost(queue.songs[0], guildID);
+            this.playQuranThatLost(guildID);
           } else {
             queue.songs.shift();
             this.client.guilds_settings.set(guildID, 'quran_queue', queue);
-            this.playQuranThatLost(queue.songs[0], guildID);
+            this.playQuranThatLost(guildID);
           }
         }
       })

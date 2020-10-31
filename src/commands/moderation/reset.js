@@ -35,6 +35,7 @@ module.exports = class extends Command {
       this.client.guilds_settings.delete(message.guild.id, "quran_channel");
       this.client.guilds_settings.delete(message.guild.id, "prefix");
       this.client.guilds_settings.delete(message.guild.id, "quran_role");
+      this.client.guilds_settings.clear(message.guild.id);
     } else {
       return `**تم إلغاء هذه العملية**`;
     }

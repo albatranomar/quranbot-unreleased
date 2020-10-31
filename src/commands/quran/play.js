@@ -49,6 +49,7 @@ module.exports = class extends Command {
       volume: 20,
       playing: true,
       repeat: false,
+      stoped: false
     };
   }
   /**
@@ -65,9 +66,8 @@ module.exports = class extends Command {
     let readers = require("../../quran-data/readers.json");
     let askForReaderNumberMessage = await message.util.send(``, {
       embed: new MessageEmbed()//.setTitle(`أرسل رقم القارىء الذي تريده`)
-        .setDescription(`\`\`\`ـ ـ ـ ـ ـ ـ ـ ـ اختر رقم القارىءـ ـ ـ ـ ـ ـ ـ ـ\`\`\`**\n${readers.map(r => `\`${r.id}\`- ${r.name}`).join("\n")}**\`\`\`ـ ـ ـ ـ ـ ـ ـ ـ 20 ثانية للأختيارـ ـ ـ ـ ـ ـ ـ ـ\`\`\``)
+        .setDescription(`\`\`\`ـ ـ ـ ـ ـ ـ ـ ـ اختر رقم القارىءـ ـ ـ ـ ـ ـ ـ ـ\`\`\`**\n${readers.map(r => `\`${r.id}\`- ${r.name}`).join("\n")}**\`\`\`ـ ـ ـ ـ ـ ـ ـ ـ 50 ثانية للأختيارـ ـ ـ ـ ـ ـ ـ ـ\`\`\``)
     })
-
     let readerNumberCollector = await askForReaderNumberMessage.channel.createMessageCollector((m) => m.author.id == message.author.id && readers.map(r => r.id).includes(parseInt(m.content)), { max: 1, time: 50000 });
     readerNumberCollector.on('collect', async (answerForReaderNumber) => {
       let theReader = readers.find(r => r.id == parseInt(answerForReaderNumber.content));
@@ -76,6 +76,9 @@ module.exports = class extends Command {
         ...this.defaultGuildQueue,
         voiceChannelID: channel.id
       });
+      console.log(message.guild.id, serverQueue);
+      console.log(`-----------------${new Date()}`);
+
 
       if (serverQueue) {
         if (serverQueue.songs.length >= 5) return message.util.send(`**${message.author}, لا يمكن إضافة اكثر من 5 مقاطع الى قائمة الانتظار**`);
@@ -101,6 +104,7 @@ module.exports = class extends Command {
         if (toplay != "ALL") {
           qEmbed.addField('معلومات', `عدد الأيات : ${toplay.ayat} \nمن الصفحة ${toplay.page[0]} الى الصفحة ${toplay.page[1]}\nسورة ${(toplay.revelation.place == 'makkah') ? 'مكية' : 'مدنية'}\nترتيب النزول: ${toplay.revelation.order}`);
         }
+        console.log(serverQueue);
         if (serverQueue.songs.length > 0) {
           serverQueue.songs.push(songToPlay);
           this.client.guilds_settings.set(message.guild.id, 'quran_queue', serverQueue);
@@ -133,6 +137,7 @@ module.exports = class extends Command {
         }
       }
     });
+
     readerNumberCollector.on('end', (_, reason) => {
       if (reason == 'time') {
         return message.util.send(`**انتهى وقت اختيار القارىء❗**`);
@@ -181,10 +186,16 @@ module.exports = class extends Command {
         .on('finish', () => {
           let ikQueue = this.client.guilds_settings.get(message.guild.id, 'quran_queue');
           if (ikQueue) {
-            if (ikQueue.repeat) {
-              this.play(ikQueue.songs[0], message)
+            if (!ikQueue.stoped) {
+              if (ikQueue.repeat) {
+                this.play(ikQueue.songs[0], message)
+              } else {
+                ikQueue.songs.shift();
+                this.client.guilds_settings.set(message.guild.id, 'quran_queue', ikQueue);
+                this.play(ikQueue.songs[0], message)
+              }
             } else {
-              ikQueue.songs.shift();
+              ikQueue.songs = [];
               this.client.guilds_settings.set(message.guild.id, 'quran_queue', ikQueue);
               this.play(ikQueue.songs[0], message)
             }

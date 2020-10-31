@@ -8,7 +8,10 @@ module.exports = class extends Command {
       category: 'developers',
       cooldown: 10000,
       ratelimit: 2,
-      ownerOnly: true
+      ownerOnly: true,
+      description: {
+        content: `👀`,
+      }
     });
   }
   /**

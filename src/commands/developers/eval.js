@@ -16,7 +16,10 @@ module.exports = class extends Command {
           match: "rest",
           default: "console.log('Hello World');"
         }
-      ]
+      ],
+      description: {
+        content: `👀`,
+      }
     });
   }
 
