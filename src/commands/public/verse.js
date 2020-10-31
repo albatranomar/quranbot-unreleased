@@ -22,8 +22,8 @@ module.exports = class extends Command {
           id: 'ayah',
           type: Argument.union('integer'),
           prompt: {
-            start: `**يجب عليك الآن إرسال رقم السورة**`,
-            retry: `**يجب عليك الآن إرسال رقم السورة, حاول مره اخرى**`
+            start: `**يجب عليك الآن إرسال رقم الاية.**`,
+            retry: `**يجب عليك الآن إرسال رقم الأية, حاول مره اخرى**`
           }
         }
       ],
