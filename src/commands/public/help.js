@@ -69,7 +69,7 @@ module.exports = class extends Command {
         HelpEmbedDefult.addField(`Examples: `, hcommand.description.examples.join('\n'));
       }
     }
-
+    HelpEmbedDefult.addField(`Quick Link`, `**[\`[Invite]\`](${this.client.config.links.invite}) - [\`[Support]\`](${this.client.config.links.discord}) - [\`[Twitter]\`](${this.client.config.links.twitter})**`);
     message.channel.send(HelpEmbedDefult);/**.then(async (dmMessage) => (message.channel.type != 'dm') ? await message.react("✅") : null).catch(async (e) => {
       console.log(`${e}`);
       await message.react("❌");

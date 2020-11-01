@@ -22,7 +22,7 @@ module.exports = class extends Command {
   exec(message, args) {
     const { channel } = message.member.voice;
     if (!channel) return `** أنا آسف ولكن يجب أن تكون في قناة صوتية لتشغيل القران الكريم! **`;
-    let ikQueue = this.client.guilds_settings.get(message.guild.id, 'quran_queue');
+    let ikQueue = this.client.guilds_settings.get(message.guild.id, 'quran_queue', {});
     const connection = this.client.quran_connections.get(message.guild.id);
     if (connection) {
       if (connection.dispatcher) {
