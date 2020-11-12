@@ -1,0 +1,36 @@
+{
+    "name": "quranbot",
+    "version": "3.0.0",
+    "description": "",
+    "main": "sharding.js",
+    "scripts": {
+        "start": "node sharding.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/albatranomar/Quranbot.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/albatranomar/Quranbot/issues"
+    },
+    "homepage": "https://github.com/albatranomar/Quranbot#readme",
+    "dependencies": {
+        "@discordjs/opus": "^0.3.2",
+        "common-tags": "^1.8.0",
+        "dblapi.js": "^2.4.1",
+        "discord-akairo": "^8.1.0",
+        "discord.js": "^12.3.1",
+        "discord.js-menu": "^1.0.3",
+        "json2yaml": "^1.1.0",
+        "node-fetch": "^2.6.0",
+        "opusscript": "0.0.7",
+        "pick-random": "^2.0.0",
+        "rxjs": "^6.6.2",
+        "sqlite": "^4.0.14",
+        "sqlite3": "^5.0.0"
+    },
+    "devDependencies": {}
+}
